@@ -1,16 +1,18 @@
 import { UserManager } from 'oidc-client-ts'
 
 export default defineNuxtPlugin(() => {
-  const config = {
+  const manager = new UserManager({
     authority: import.meta.env.VITE_ZITADEL_ISSUER,
     client_id: import.meta.env.VITE_ZITADEL_CLIENT_ID,
-    redirectUri: 'http://localhost:3000/auth/callback/zitadel',
-    logoutRedirectUri: 'http://localhost:3000/',
+    redirect_uri: 'http://localhost:3000/auth/callback',
+    post_logout_redirect_uri: 'http://localhost:3000/',
     response_type: 'code',
-    scope: 'openid profile email'
-  }
+    scope: 'openid profile email',
+    signinRedirect: {
+    prompt: 'login'
+}
 
-  const manager = new UserManager(config)
+  })
 
   return {
     provide: {

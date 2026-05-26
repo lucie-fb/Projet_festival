@@ -8,7 +8,10 @@ onMounted(() => {
 
 <template>
   <div>
-    <h1>Connexion</h1>
+    <div>
+    <h1>Bienvenue sur</h1>
+    <img alt="Logo du site Sun and Sound" src="/public/images/logo_sun&sound.png" width="30" height="30">
+    </div>
 
     <div v-if="user">
       <p>Connecté en tant que {{ user.profile.name }}</p>
