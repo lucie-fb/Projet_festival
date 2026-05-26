@@ -1,16 +1,14 @@
 <script setup>
-import { useRouter } from '#app'
-import { onMounted } from 'vue'
-
-const router = useRouter()
-const { $oidc } = useNuxtApp()
+const nuxtApp = useNuxtApp()
+const { loadUser } = useAuth()
 
 onMounted(async () => {
-  await $oidc.signinRedirectCallback()
-  router.push('/festivals')
+  await nuxtApp.$oidc.signinRedirectCallback()
+  await loadUser()
+  navigateTo('/')
 })
 </script>
 
 <template>
-  <div>Connexion en cours...</div>
+  <p>Connexion en cours...</p>
 </template>

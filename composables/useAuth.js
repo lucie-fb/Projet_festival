@@ -1,13 +1,19 @@
 export function useAuth() {
-  const { $oidc } = useNuxtApp()
-  console.log("OIDC plugin loaded")
-  return {
-    login: () => $oidc.signinRedirect(),
-    logout: () => $oidc.signoutRedirect(),
-    getUser: () => $oidc.getUser(),
-    isAuthenticated: async () => {
-      const user = await $oidc.getUser()
-      return !!user && !user.expired
-    }
+  const user = useState('user', () => null)
+  const nuxtApp = useNuxtApp()
+
+  async function login() {
+    await nuxtApp.$oidc.signinRedirect()
   }
+
+  async function logout() {
+    await nuxtApp.$oidc.signoutRedirect()
+  }
+
+  async function loadUser() {
+    const u = await nuxtApp.$oidc.getUser()
+    user.value = u
+  }
+
+  return { user, login, logout, loadUser }
 }

@@ -1,8 +1,19 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { pgTable, serial, text } from "drizzle-orm/pg-core";
 
-export const festivals = sqliteTable("festivals", {
-  id: text("id").primaryKey(),
+export const festivals = pgTable("festivals", {
+  id: serial("id").primaryKey(),
   name: text("name"),
-  city: text("city"),
-  date: text("date"),
+  source: text("source")
+});
+
+export const artists = pgTable("artists", {
+  id :serial("id").primaryKey(),
+  name: text("name"),
+  source: text("source")
+});
+
+export const albums = pgTable("albums", {
+  id :serial("id").primaryKey(),
+  name: text("name"),
+  source: text("source")
 });

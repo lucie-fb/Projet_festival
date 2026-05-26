@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "checkJs": false,
-    "baseUrl": "."
   },
   "exclude": ["node_modules", ".nuxt"]
 }

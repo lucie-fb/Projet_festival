@@ -1,15 +1,33 @@
 <script setup>
-const festivals = await $fetch("/api/ticketmaster?artist=festival")
-const artists = await $fetch("/api/spotify?artist=festival")
+let festivals = [];
+let albums = [];
 
-console.log("Data ok :", festivals)
+try {
+  const spotify = await $fetch("/api/spotify/albums");
+  const ticketmaster = await $fetch("/api/ticketmaster/festivals");
+
+  festivals = [...ticketmaster];
+  albums = [...spotify];
+
+  await $fetch("/api/festivals/save", {
+    method: "POST",
+    body: { festivals },
+  });
+  await $fetch("/api/albums/save", {
+    method: "POST",
+    body: { albums },
+  });
+  console.log("ticketmaster =", ticketmaster)
+console.log("spotify =", spotify)
+} catch (error) {
+  console.error(error);
+}
 </script>
 
 <template>
   <div>
-    <h1>Festivals found</h1>
-
+    <h1>Festivals trouvés</h1>
     <pre>{{ festivals }}</pre>
-    <pre>{{ artists }}</pre>
+    <pre>{{ albums }}</pre>
   </div>
 </template>
