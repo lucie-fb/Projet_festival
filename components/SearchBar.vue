@@ -1,15 +1,7 @@
 <script setup>
 import { ref } from "vue";
-/**
- * On expose un v-model personnalisé : v-model:query
- * Ça veut dire que le parent pourra faire :
- * <SearchBar v-model:query="searchTerm" />
- */
+
 const query = defineModel('query')
-/**
- * On déclare un événement "search"
- * Le parent pourra écouter : @search="search"
- */
 const emit = defineEmits(['search'])
 </script>
 
