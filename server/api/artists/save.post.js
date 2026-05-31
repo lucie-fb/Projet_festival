@@ -12,7 +12,9 @@ export default defineEventHandler(async (event) => {
   }
 
   const rows = body.artists.map(f => ({
+    image: f.image,
     name: f.name,
+    id: f.id,
     source: f.source
   }));
 

@@ -1,3 +1,5 @@
+import { albums } from "../../db/schema"
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
 
@@ -25,8 +27,9 @@ export default defineEventHandler(async (event) => {
   })
 
   return data.artists.items.map(a => ({
-    name: a.name,
     image: a.images?.[0]?.url || null,
+    id: a.id,
+    name: a.name,
     source: "spotify"
   }))
 })

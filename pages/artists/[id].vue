@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import ArtistCard from '~/components/ArtistCard.vue'
 
 definePageMeta({
   middleware: 'auth'
@@ -25,7 +26,21 @@ async function search() {
       }
     })
 
-    artists.value = result
+    const artistsAndAlbums = []
+
+    for (const artist of result) {
+      const lastAlbum = await $fetch('/api/spotify/albums', {
+        method: 'GET',
+        query: {id:artist.id}
+      })
+
+      artistsAndAlbums.push({
+        ...artist,
+        lastAlbum
+      })
+    }
+    
+    artists.value = artistsAndAlbums
 
     await $fetch('/api/artists/save', {
       method: 'POST',
@@ -49,6 +64,9 @@ async function search() {
 
     <h1>Artistes trouvés</h1>
 
-    <pre>{{ artists }}</pre>
+    <div class="grid">
+      <ArtistCard v-for="artist in artists":key="artist.id":artist="artist"/>
+    </div>
+    <<pre>{{ artists }}</pre>>
   </div>
 </template>

@@ -1,4 +1,4 @@
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
 
   const tokenResponse = await $fetch("https://accounts.spotify.com/api/token", {
@@ -15,8 +15,9 @@ export default defineEventHandler(async () => {
 
   const accessToken = tokenResponse.access_token
 
-  const query = encodeURIComponent("album")
-  const searchUrl = `https://api.spotify.com/v1/search?q=${query}&type=album&limit=10`
+  const {id} = getQuery(event)
+  const safeId = encodeURIComponent(id)
+  const searchUrl = `https://api.spotify.com/v1/artists/${safeId}/albums?include_groups=album&limit=1&market=FR`
 
   const data = await $fetch(searchUrl, {
     headers: {
@@ -24,8 +25,9 @@ export default defineEventHandler(async () => {
     }
   })
 
-  return data.albums.items.map(a => ({
+  return data.items.map(a => ({
     name: a.name,
+    release_date: a.release_date,
     source: "spotify"
   }))
 })

@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
 
   const rows = body.albums.map(f => ({
     name: f.name,
+    release_date: f.release_date,
     source: f.source
   }));
 
