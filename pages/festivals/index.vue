@@ -1,53 +1,52 @@
 <script setup>
 definePageMeta({
-  middleware: 'auth'
-})
+  middleware: "auth",
+});
 
-const searchTerm = ref("")
-const filterDate = ref("")
-const festivals = ref([])
-const allFestivals = ref([])
-const errorMessage = ref("")
+const searchTerm = ref("");
+const filterDate = ref("");
+const festivals = ref([]);
+const allFestivals = ref([]);
+const errorMessage = ref("");
 
 async function search() {
-  errorMessage.value = ""
+  errorMessage.value = "";
 
   if (!searchTerm.value.trim()) {
-    errorMessage.value = "Merci de saisir un nom de festival."
-    return
+    errorMessage.value = "Merci de saisir un nom de festival.";
+    return;
   }
 
   try {
-    const result = await $fetch('/api/ticketmaster/festivals', {
-      method: 'GET',
+    const result = await $fetch("/api/ticketmaster/festivals", {
+      method: "GET",
       query: {
         festival: searchTerm.value,
-      }
-    })
+      },
+    });
 
-    allFestivals.value = result
-    festivals.value = result
+    allFestivals.value = result;
+    festivals.value = result;
 
-    await $fetch('/api/festivals/save', {
-      method: 'POST',
-      body: { festivals: result }
-    })
-
+    await $fetch("/api/festivals/save", {
+      method: "POST",
+      body: { festivals: result },
+    });
   } catch (error) {
-    console.error(error)
-    errorMessage.value = "Une erreur est survenue lors de la recherche."
+    console.error(error);
+    errorMessage.value = "Une erreur est survenue lors de la recherche.";
   }
 }
 
 function applyFilter() {
   // on repart toujours de la liste complète
-  let list = [...allFestivals.value]
+  let list = [...allFestivals.value];
 
   if (filterDate.value) {
-    list = list.filter(f => f.date && f.date.startsWith(filterDate.value))
+    list = list.filter((f) => f.date && f.date.startsWith(filterDate.value));
   }
 
-  festivals.value = list
+  festivals.value = list;
 }
 </script>
 
@@ -55,14 +54,32 @@ function applyFilter() {
   <div>
     <SearchBar v-model:query="searchTerm" @search="search" />
 
-    <p v-if="errorMessage" style="color: red;">
+    <p v-if="errorMessage" style="color: red">
       {{ errorMessage }}
     </p>
 
-    <input v-model="filterDate" type="date">
+    <input v-model="filterDate" type="date" />
     <button @click="applyFilter">Filtrer par date</button>
 
     <h1>Festivals trouvés</h1>
-    <pre>{{ festivals }}</pre>
+
+    <div class="festivals">
+      <div class="grid">
+        <FestivalCard
+          v-for="festival in festivals"
+          :key="festival.id"
+          :festival="festival"
+        />
+      </div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+</style>

@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     source: f.source
   }));
 
-  const result = await db.insert(festivals).values(rows).returning();
+  const result = await db.insert(festivals).values(rows).onConflictDoNothing().returning();
 
   return { inserted: result.length };
 });
