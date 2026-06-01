@@ -6,7 +6,7 @@ definePageMeta({
 const searchTerm = ref("")
 const filterDate = ref("")
 const festivals = ref([])
-const allFestivals = ref([]) // on garde la liste complète
+const allFestivals = ref([])
 const errorMessage = ref("")
 
 async function search() {

@@ -65,8 +65,20 @@ async function search() {
     <h1>Artistes trouvés</h1>
 
     <div class="grid">
-      <ArtistCard v-for="artist in artists":key="artist.id":artist="artist"/>
-    </div>
-    <<pre>{{ artists }}</pre>>
+  <ArtistCard 
+    v-for="artist in artists" 
+    :key="artist.id" 
+    :artist="artist" 
+  />
+</div>
   </div>
 </template>
+
+<style scoped>
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+</style>
