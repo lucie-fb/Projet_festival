@@ -11,6 +11,7 @@ const emit = defineEmits(['search'])
       type="search" 
       placeholder="Recherche…" 
       v-model="query"
+      @keyup.enter="$emit('search')"
       class="search-input"
     />
 

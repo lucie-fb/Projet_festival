@@ -5,10 +5,15 @@ const props = defineProps({
     required: true,
   },
 });
+
+const router = useRouter();
+const clickArtists = () => {
+  router.push(`artists/[id]?name=${encodeURIComponent(props.artist.name)}`)
+}
 </script>
 
 <template>
-  <article class="card artist-card">
+  <article class="card artist-card" @click="clickArtists">
     <img :src="artist.image" :alt="artist.name" />
     <h2>{{ artist.name }}</h2>
     <p v-if="artist.lastAlbum">
@@ -16,6 +21,7 @@ const props = defineProps({
     </p>
   </article>
 </template>
+
 <style lang="css" scoped>
 .artist-card {
   background: var(--color-white);

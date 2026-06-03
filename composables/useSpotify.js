@@ -3,9 +3,12 @@ export const useSpotify = () => {
     return await $fetch("/api/spotify/albums")
   }
 
-  const searchArtists = async () => {
-    return await $fetch("/api/spotify/artists")
+  const searchArtists = async (name) => {
+    return await $fetch(`/api/spotify/artists?name=${encodeURIComponent(name)}`)
   }
 
-  return { searchAlbums, searchArtists }
+  const top5 = async () => {
+    return await $fetch("/api/spotify/top5artists")
+  }
+  return { searchAlbums, searchArtists, top5 }
 }
