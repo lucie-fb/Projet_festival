@@ -1,4 +1,4 @@
-import { UserManager } from 'oidc-client-ts'
+import { UserManager, WebStorageStateStore} from 'oidc-client-ts'
 
 export default defineNuxtPlugin(() => {
   const manager = new UserManager({
@@ -8,6 +8,9 @@ export default defineNuxtPlugin(() => {
     post_logout_redirect_uri: 'http://localhost:3000/',
     response_type: 'code',
     scope: 'openid profile email',
+    userStore: new WebStorageStateStore({ store: window.localStorage }),
+    loadUserInfo: true,
+    automaticSilentRenew: true,
     signinRedirect: {
     prompt: 'login'
 }

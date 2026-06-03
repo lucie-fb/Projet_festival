@@ -1,4 +1,6 @@
 export default defineNuxtConfig({
+  css: ['@/assets/styles/main.css'],
+  
   modules: ['nuxt-snackbar'],
 
   //CLient

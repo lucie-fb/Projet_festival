@@ -54,17 +54,16 @@ async function search() {
       query: { name: spotifyArtist.name },
     });
 
-    if (!tmArtists.length){
-      festivals.value = []
-      return
+    if (!tmArtists.length) {
+      festivals.value = [];
+      return;
     }
 
-    const tmFestivals =  await $fetch("/api/ticketmaster/festivalsByArtists", {
+    const tmFestivals = await $fetch("/api/ticketmaster/festivalsByArtists", {
       query: { id: tmArtists[0].id },
     });
 
-    festivals.value = tmFestivals
-
+    festivals.value = tmFestivals;
   } catch (error) {
     console.error(error);
     errorMessage.value = "Une erreur est survenue lors de la recherche.";
@@ -73,31 +72,67 @@ async function search() {
 </script>
 
 <template>
-  <div>
-    <SearchBar v-model:query="searchTerm" @search="search" />
+  <div class="page-container">
+    <div class="searchbar-wrapper">
+      <SearchBar v-model:query="searchTerm" @search="search" />
+    </div>
 
-    <p v-if="errorMessage" style="color: red">
+    <p v-if="errorMessage" class="error-message">
       {{ errorMessage }}
     </p>
 
-    <h1>Artistes trouvés</h1>
+    <h1>Artiste trouvé</h1>
 
-    <div class="grid">
-      <ArtistCard v-for="artist in artists" :key="artist.id" :artist="artist" />
+    <div class="artists">
+      <div class="grid">
+        <ArtistCard
+          v-for="artist in artists"
+          :key="artist.id"
+          :artist="artist"
+        />
+      </div>
     </div>
 
     <h1 v-if="festivals.length">Festivals où il performe</h1>
-    <div class="grid">
-      <FestivalCard v-for="festival in festivals" :key="festival.id" :festival="festival"/>
+    <div class="festivals">
+      <div class="grid">
+        <FestivalCard
+          v-for="festival in festivals"
+          :key="festival.id"
+          :festival="festival"
+        />
+      </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.grid {
+<style lang="css" scoped>
+.page-container {
+  padding: var(--space-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Titre de section */
+.page-container h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+/* Grille artistes */
+.artists .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.festivals .grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 16px;
 }
 </style>

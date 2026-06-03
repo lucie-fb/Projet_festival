@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   const accessToken = tokenResponse.access_token
 
   const {name} = getQuery(event)
-  const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(name)}&type=artist&limit=10`
+  const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(name)}&type=artist&limit=1`
 
   const data = await $fetch(searchUrl, {
     headers: {

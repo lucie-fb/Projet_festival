@@ -51,15 +51,19 @@ function applyFilter() {
 </script>
 
 <template>
-  <div>
-    <SearchBar v-model:query="searchTerm" @search="search" />
+  <div class="festival-page">
+    <div class="searchbar-wrapper">
+      <SearchBar v-model:query="searchTerm" @search="search" />
+    </div>
 
-    <p v-if="errorMessage" style="color: red">
+    <p v-if="errorMessage" class="error-message">
       {{ errorMessage }}
     </p>
 
-    <input v-model="filterDate" type="date" />
-    <button @click="applyFilter">Filtrer par date</button>
+    <div class="filter-row">
+      <input v-model="filterDate" type="date" class="filter-date" />
+      <button class="filter-btn" @click="applyFilter">Filtrer par date</button>
+    </div>
 
     <h1>Festivals trouvés</h1>
 
@@ -75,11 +79,74 @@ function applyFilter() {
   </div>
 </template>
 
-<style scoped>
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+<style lang="css" scoped>
+
+.festival-page {
+  padding: var(--space-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
 }
+
+.searchbar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.filter-date {
+  padding: 10px 14px;
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.filter-btn {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.filter-btn:hover {
+  background: #b30085;
+}
+
+.festival-page h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 20px;
+}
+
+.festivals .grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  height: 420px;
+}
+
 </style>

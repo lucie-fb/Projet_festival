@@ -4,7 +4,17 @@ definePageMeta({
   middleware: 'auth'
 })
 
+async function search() {
+  errorMessage.value = "";
 
+  if (!searchTerm.value.trim()) {
+    errorMessage.value = "Merci de saisir un nom d'artiste.";
+    return;
+  }
+
+  try {
+  }
+}
 
 </script>
 

@@ -9,7 +9,7 @@ onMounted(async () => {
   await nextTick()
 
   // 1. Finir le login OIDC
-  await nuxtApp.$oidc.signinRedirectCallback()
+  await nuxtApp.$oidc.signinCallback()
 
   // 2. Charger l'utilisateur
   await loadUser()

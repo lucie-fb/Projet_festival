@@ -53,63 +53,98 @@ function toggleFlip() {
   </article>
 </template>
 
-<style scoped>
+<style lang="css" scoped>
+
 .card {
   width: 100%;
-  height: 500px;
+  height: 420px;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform .6s;
-}
+  transition: transform .6s ease;
 
+  border: 2px solid rgba(153, 0, 112, 0.25);
+  border-radius: 20px;
+
+  box-shadow: 0 6px 18px rgba(153, 0, 112, 0.25);
+
+  background: transparent;
+  font-family: 'Poppins', sans-serif;
+}
 
 .card.flipped {
   transform: rotateY(180deg);
 }
 
-.front, .back {
+/* Faces */
+.front,
+.back {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
-  background: #fff;
-  border-radius: 14px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 18px;
 }
 
-.back {
-  transform: rotateY(180deg);
-  text-align: left;
+.front {
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 
 .banner {
   width: 100%;
-  height: 150px;
+  height: 140px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+}
+
+.content h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.meta {
+  font-size: .95rem;
+  opacity: 0.9;
+  margin-bottom: 14px;
+}
+
+.back {
+  background: var(--color-primary);
+  color: var(--color-white);
+  transform: rotateY(180deg);
+  text-align: left;
 }
 
 .artists {
   margin-top: 1rem;
-  line-height: 1.6;
+  line-height: 1.5;
   font-size: .95rem;
-  color: #333;
+  opacity: 0.95;
 }
 
 .btn {
-  background: #ff7b00;
-  color: white;
+  background: var(--color-secondary);
+  color: var(--color-primary);
   border: none;
-  padding: .6rem 1rem;
-  border-radius: 8px;
-  font-weight: bold;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background .2s ease;
-  margin-top: 1rem;
+  transition: 0.2s ease;
+  font-size: .95rem;
+  align-self: flex-start;
 }
 
 .btn:hover {
-  background: #e56f00;
+  background: #ffd6f4;
 }
+
 </style>

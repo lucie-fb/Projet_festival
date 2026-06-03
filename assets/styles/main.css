@@ -1,0 +1,53 @@
+:root {
+  --color-primary: #990070;
+  --color-secondary: #FFC0EE;
+  --color-black: #121212;
+  --color-white: #ffffff;
+
+  --radius: 12px;
+  --radius-large: 20px;
+
+  --shadow-soft: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-strong: 0 6px 20px rgba(0,0,0,0.15);
+
+  --space-s: 8px;
+  --space-m: 16px;
+  --space-l: 24px;
+  --space-xl: 40px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-white);
+  color: var(--color-black);
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.5;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+}
+
+.page-container,
+.festival-page,
+.favorites-page {
+  padding: var(--space-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+  width: 100%;
+}
