@@ -14,6 +14,8 @@ async function search() {
 
   try {
   }
+} catch{
+  
 }
 
 </script>
