@@ -57,7 +57,7 @@ function toggleFlip() {
 
 .card {
   width: 100%;
-  height: 420px;
+  height: 450px;
   position: relative;
   transform-style: preserve-3d;
   transition: transform .6s ease;

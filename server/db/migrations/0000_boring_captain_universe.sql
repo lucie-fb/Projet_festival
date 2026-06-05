@@ -17,3 +17,13 @@ CREATE TABLE "festivals" (
 	"name" text,
 	"source" text
 );
+--> statement-breakpoint
+CREATE TABLE "top5" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"image" text,
+	"name" text,
+	"genre" text,
+	"followers" text,
+	"popularity" text,
+	"source" text
+);

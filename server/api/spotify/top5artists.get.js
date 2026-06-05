@@ -1,6 +1,6 @@
 import { albums } from "../../db/schema"
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async () => {
   const config = useRuntimeConfig()
 
   const tokenResponse = await $fetch("https://accounts.spotify.com/api/token", {

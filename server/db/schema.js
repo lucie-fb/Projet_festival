@@ -19,3 +19,13 @@ export const albums = pgTable("albums", {
   name: text("name"),
   source: text("source")
 });
+
+export const top5 = pgTable("top5", {
+  id :serial("id").primaryKey(),
+  image: text("image"),
+  name: text("name"),
+  genres: text("genre"),
+  followers: text("followers"),
+  popularity: text("popularity"),
+  source: text("source")
+});

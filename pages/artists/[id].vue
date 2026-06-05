@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import ArtistCard from "~/components/ArtistCard.vue";
 import FestivalCard from "~/components/FestivalCard.vue";
+import { useRoute } from "vue-router";
 
 definePageMeta({
   middleware: "auth",
@@ -11,6 +12,7 @@ const searchTerm = ref("");
 const artists = ref([]);
 const festivals = ref([]);
 const errorMessage = ref("");
+const route = useRoute();
 
 async function search() {
   errorMessage.value = "";
@@ -69,6 +71,13 @@ async function search() {
     errorMessage.value = "Une erreur est survenue lors de la recherche.";
   }
 }
+onMounted(async () => {
+  if (route.query.name) {
+    searchTerm.value = route.query.name
+    await search()
+  }
+})
+
 </script>
 
 <template>
@@ -77,6 +86,7 @@ async function search() {
       <SearchBar v-model:query="searchTerm" @search="search" />
     </div>
 
+    <p> Recherchez vos artistes favoris et voyez où ils performent !</p>
     <p v-if="errorMessage" class="error-message">
       {{ errorMessage }}
     </p>
@@ -107,6 +117,11 @@ async function search() {
 </template>
 
 <style lang="css" scoped>
+p {
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+}
 .page-container {
   padding: var(--space-xl);
   max-width: 1200px;

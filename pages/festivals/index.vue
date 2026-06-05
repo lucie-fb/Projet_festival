@@ -56,6 +56,8 @@ function applyFilter() {
       <SearchBar v-model:query="searchTerm" @search="search" />
     </div>
 
+    <p> Recherchez le festival de votre choix </p>
+
     <p v-if="errorMessage" class="error-message">
       {{ errorMessage }}
     </p>
@@ -80,6 +82,12 @@ function applyFilter() {
 </template>
 
 <style lang="css" scoped>
+
+p {
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+}
 
 .festival-page {
   padding: var(--space-xl);
@@ -142,11 +150,6 @@ function applyFilter() {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   width: 100%;
-}
-
-.card {
-  width: 100%;
-  height: 420px;
 }
 
 </style>

@@ -16,9 +16,6 @@ const clickArtists = () => {
   <article class="card artist-card" @click="clickArtists">
     <img :src="artist.image" :alt="artist.name" />
     <h2>{{ artist.name }}</h2>
-    <p v-if="artist.lastAlbum">
-      Dernier album : <strong>{{ artist.lastAlbum.name }}</strong>
-    </p>
   </article>
 </template>
 
