@@ -3,6 +3,7 @@ import { ref } from "vue";
 import ArtistCard from "~/components/ArtistCard.vue";
 import FestivalCard from "~/components/FestivalCard.vue";
 import { useRoute } from "vue-router";
+import {useSpotify} from '~/composables/useSpotify'
 
 definePageMeta({
   middleware: "auth",
@@ -13,9 +14,13 @@ const artists = ref([]);
 const festivals = ref([]);
 const errorMessage = ref("");
 const route = useRoute();
+const { top20 } = useSpotify();
+const hasSearched = ref(false)
+
 
 async function search() {
   errorMessage.value = "";
+  hasSearched.value = true
 
   if (!searchTerm.value.trim()) {
     errorMessage.value = "Merci de saisir un nom d'artiste.";
@@ -72,6 +77,9 @@ async function search() {
   }
 }
 onMounted(async () => {
+   if (!route.query.name) {
+    artists.value = await top20();
+  }
   if (route.query.name) {
     searchTerm.value = route.query.name
     await search()
@@ -91,7 +99,9 @@ onMounted(async () => {
       {{ errorMessage }}
     </p>
 
-    <h1>Artiste trouvé</h1>
+    <h1 v-if="!hasSearched">Top 20 des artistes les plus écoutés</h1>
+    <h1 v-else>Artiste trouvé</h1>
+
 
     <div class="artists">
       <div class="grid">
@@ -128,7 +138,6 @@ p {
   margin: 0 auto;
 }
 
-/* Titre de section */
 .page-container h1 {
   font-size: 1.8rem;
   font-weight: 600;
@@ -137,10 +146,9 @@ p {
   margin-bottom: 16px;
 }
 
-/* Grille artistes */
 .artists .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 24px;
 }
 

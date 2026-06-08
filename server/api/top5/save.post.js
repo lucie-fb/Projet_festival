@@ -1,5 +1,5 @@
 import { db } from "~/server/db";
-import { top5 } from "../../db/schema";
+import { festivals, top5 } from "../../db/schema";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -12,16 +12,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const rows = body.top5.map(f => ({
-    image: f.images?.[0]?.url || null,
-    id: f.id,
+    image: f.image || null,
     name: f.name,
-    genres: f.genre,
-    followers: f.followers?.total||0,
-    popularity: f.popularity,
-    source: "spotify"
+    source: "ticketmaster"
   }));
 
-  const result = await db.insert(top5).values(rows).onConflictDoNothing().returning();
+  const result = await db.insert(festivals).values(rows).onConflictDoNothing().returning();
 
   return { inserted: result.length };
 });

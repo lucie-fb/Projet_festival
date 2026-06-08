@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   css: ['@/assets/styles/main.css'],
   
-  modules: ['nuxt-snackbar'],
+  modules: ['nuxt-snackbar', '@nuxtjs/i18n'],
 
   //CLient
   auth: {
@@ -26,5 +26,13 @@ export default defineNuxtConfig({
     POSTGRES_URL: process.env.POSTGRES_URL,
     VITE_ZITADEL_ISSUER: process.env.VITE_ZITADEL_ISSUER,
     VITE_ZITADEL_CLIENT_ID: process.env.VITE_ZITADEL_CLIENT_ID,
+  },
+
+  i18n: {
+    locales: [
+      { code: 'en', language: 'en-US' },
+      { code: 'fr', language: 'fr-FR' }
+    ],
+    defaultLocale: 'en',
   }
 })

@@ -1,4 +1,9 @@
 <script setup>
+import {ref, onMounted} from 'vue' 
+import { useRoute } from "vue-router";
+import {useTicketmaster} from '~/composables/useTicketmaster'
+import FestivalCard from '../components/FestivalCard.vue';
+
 definePageMeta({
   middleware: "auth",
 });
@@ -8,9 +13,23 @@ const filterDate = ref("");
 const festivals = ref([]);
 const allFestivals = ref([]);
 const errorMessage = ref("");
+const selectedGenre = ref("");
+const { top20f } = useTicketmaster();
+const route = useRoute();
+
+const filteredFestivals = computed(() => {
+  if (!selectedGenre.value) return festivals.value
+
+  return festivals.value.filter(f =>
+    f.categories?.some(c =>
+      c.genre?.toLowerCase() === selectedGenre.value.toLowerCase()
+    )
+  )
+})
 
 async function search() {
   errorMessage.value = "";
+  hasSearched.value = true
 
   if (!searchTerm.value.trim()) {
     errorMessage.value = "Merci de saisir un nom de festival.";
@@ -26,12 +45,15 @@ async function search() {
     });
 
     allFestivals.value = result;
+    allFestivals.value = festivals.value
     festivals.value = result;
 
     await $fetch("/api/festivals/save", {
       method: "POST",
       body: { festivals: result },
     });
+
+    
   } catch (error) {
     console.error(error);
     errorMessage.value = "Une erreur est survenue lors de la recherche.";
@@ -48,6 +70,17 @@ function applyFilter() {
 
   festivals.value = list;
 }
+
+onMounted(async () => {
+   if (!route.query.name) {
+    festivals.value = await top20f();
+  }
+  if (route.query.name) {
+    searchTerm.value = route.query.name
+    await search()
+  }
+})
+
 </script>
 
 <template>
@@ -67,12 +100,22 @@ function applyFilter() {
       <button class="filter-btn" @click="applyFilter">Filtrer par date</button>
     </div>
 
-    <h1>Festivals trouvés</h1>
+    <select v-model="selectedGenre" class="filter-select">
+  <option value="">Tous les genres</option>
+  <option value="Rock">Rock</option>
+  <option value="Pop">Pop</option>
+  <option value="Electronic">Electro</option>
+  <option value="Hip-Hop">Hip-Hop</option>
+  <option value="Jazz">Jazz</option>
+</select>
+
+ <h1 v-if="!hasSearched">Top 20 des festivals à venir</h1>
+    <h1 v-else>Festivals trouvés</h1>
 
     <div class="festivals">
       <div class="grid">
         <FestivalCard
-          v-for="festival in festivals"
+          v-for="festival in filteredFestivals"
           :key="festival.id"
           :festival="festival"
         />
@@ -82,6 +125,19 @@ function applyFilter() {
 </template>
 
 <style lang="css" scoped>
+
+.filter-select {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 2px solid var(--color-primary);
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 30px;
+  cursor: pointer;
+  background: white;
+  color: var(--color-primary);
+  font-weight: 600;
+}
 
 p {
   font-size: 1rem;

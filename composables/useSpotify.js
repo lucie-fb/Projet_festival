@@ -10,5 +10,10 @@ export const useSpotify = () => {
   const top5 = async () => {
     return await $fetch("/api/spotify/top5artists")
   }
-  return { searchAlbums, searchArtists, top5 }
+
+  const top20 = async () => {
+    return await $fetch("/api/spotify/top20artists")
+  }
+
+  return { searchAlbums, searchArtists, top5, top20 }
 }
