@@ -18,6 +18,18 @@ CREATE TABLE "festivals" (
 	"source" text
 );
 --> statement-breakpoint
+CREATE TABLE "top20" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"image" text,
+	"date" text,
+	"city" text,
+	"country" text,
+	"popularity" text,
+	"source" text,
+	"lineup" jsonb,
+	"categories" jsonb
+);
+--> statement-breakpoint
 CREATE TABLE "top5" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"image" text,
@@ -25,5 +37,7 @@ CREATE TABLE "top5" (
 	"genre" text,
 	"followers" text,
 	"popularity" text,
-	"source" text
+	"source" text,
+	"lineup" jsonb,
+	"categories" jsonb
 );

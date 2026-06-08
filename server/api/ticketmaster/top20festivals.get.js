@@ -8,7 +8,7 @@ export default defineEventHandler(async () => {
 
     const events = data._embedded?.events || []
 
-    return events.slice(0, 20).map(e => ({
+    return events.slice(0, 30).map(e => ({
       id: e.id,
       name: e.name,
       date: e.dates?.start?.localDate || null,

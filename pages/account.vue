@@ -1,4 +1,9 @@
 <script setup>
+
+definePageMeta({
+  middleware: 'auth'
+})
+
 const { user, loadUser } = useAuth();
 
 onMounted(() => {

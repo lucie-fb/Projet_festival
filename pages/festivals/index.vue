@@ -61,7 +61,6 @@ async function search() {
 }
 
 function applyFilter() {
-  // on repart toujours de la liste complète
   let list = [...allFestivals.value];
 
   if (filterDate.value) {

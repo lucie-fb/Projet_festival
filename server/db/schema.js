@@ -1,4 +1,4 @@
-import { pgTable, serial, text } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, jsonb } from "drizzle-orm/pg-core";
 
 export const festivals = pgTable("festivals", {
   id: serial("id").primaryKey(),
@@ -23,9 +23,23 @@ export const albums = pgTable("albums", {
 export const top5 = pgTable("top5", {
   id :serial("id").primaryKey(),
   image: text("image"),
-  name: text("name"),
-  genres: text("genre"),
-  followers: text("followers"),
+  date: text("name"),
+  city: text("genre"),
+  country: text("followers"),
   popularity: text("popularity"),
-  source: text("source")
+  source: text("source"),
+  lineup: jsonb("lineup"),
+  categories: jsonb("categories")
+});
+
+export const top20 = pgTable("top20", {
+  id :serial("id").primaryKey(),
+  image: text("image"),
+  date: text("date"),
+  city: text("city"),
+  country: text("country"),
+  popularity: text("popularity"),
+  source: text("source"),
+  lineup: jsonb("lineup"),
+  categories: jsonb("categories")
 });
