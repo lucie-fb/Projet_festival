@@ -1,8 +1,8 @@
 <script setup>
-import {ref, onMounted} from 'vue' 
+import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import {useTicketmaster} from '~/composables/useTicketmaster'
-import FestivalCard from '../components/FestivalCard.vue';
+import { useTicketmaster } from "~/composables/useTicketmaster";
+import FestivalCard from "../components/FestivalCard.vue";
 
 definePageMeta({
   middleware: "auth",
@@ -16,20 +16,21 @@ const errorMessage = ref("");
 const selectedGenre = ref("");
 const { top20f } = useTicketmaster();
 const route = useRoute();
+const isLoading = ref(true);
 
 const filteredFestivals = computed(() => {
-  if (!selectedGenre.value) return festivals.value
+  if (!selectedGenre.value) return festivals.value;
 
-  return festivals.value.filter(f =>
-    f.categories?.some(c =>
-      c.genre?.toLowerCase() === selectedGenre.value.toLowerCase()
-    )
-  )
-})
+  return festivals.value.filter((f) =>
+    f.categories?.some(
+      (c) => c.genre?.toLowerCase() === selectedGenre.value.toLowerCase(),
+    ),
+  );
+});
 
 async function search() {
   errorMessage.value = "";
-  hasSearched.value = true
+  hasSearched.value = true;
 
   if (!searchTerm.value.trim()) {
     errorMessage.value = "Merci de saisir un nom de festival.";
@@ -45,15 +46,13 @@ async function search() {
     });
 
     allFestivals.value = result;
-    allFestivals.value = festivals.value
+    allFestivals.value = festivals.value;
     festivals.value = result;
 
     await $fetch("/api/festivals/save", {
       method: "POST",
       body: { festivals: result },
     });
-
-    
   } catch (error) {
     console.error(error);
     errorMessage.value = "Une erreur est survenue lors de la recherche.";
@@ -71,24 +70,29 @@ function applyFilter() {
 }
 
 onMounted(async () => {
-   if (!route.query.name) {
+  if (!route.query.name) {
     festivals.value = await top20f();
   }
   if (route.query.name) {
-    searchTerm.value = route.query.name
-    await search()
+    searchTerm.value = route.query.name;
+    await search();
   }
-})
-
+  isLoading.value = false;
+});
 </script>
 
 <template>
   <div class="festival-page">
+    <div v-if="isLoading" class="loading-box">
+      <div class="spinner"></div>
+      <p>Chargement…</p>
+    </div>
+    <div v-else>
     <div class="searchbar-wrapper">
       <SearchBar v-model:query="searchTerm" @search="search" />
     </div>
 
-    <p> Recherchez le festival de votre choix </p>
+    <p>Recherchez le festival de votre choix</p>
 
     <p v-if="errorMessage" class="error-message">
       {{ errorMessage }}
@@ -100,37 +104,37 @@ onMounted(async () => {
     </div>
 
     <select v-model="selectedGenre" class="filter-select">
-  <option value="">Tous les genres</option>
-  <option value="Rock">Rock</option>
-  <option value="Pop">Pop</option>
-  <option value="Electronic">Electro</option>
-  <option value="Hip-Hop">Hip-Hop</option>
-  <option value="Jazz">Jazz</option>
-</select>
+      <option value="">Tous les genres</option>
+      <option value="Rock">Rock</option>
+      <option value="Pop">Pop</option>
+      <option value="Electronic">Electro</option>
+      <option value="Hip-Hop">Hip-Hop</option>
+      <option value="Jazz">Jazz</option>
+    </select>
+    
+      <h1 v-if="!hasSearched">Top 20 des festivals à venir</h1>
+      <h1 v-else>Festivals trouvés</h1>
 
- <h1 v-if="!hasSearched">Top 20 des festivals à venir</h1>
-    <h1 v-else>Festivals trouvés</h1>
-
-    <div class="festivals">
-      <div class="grid">
-        <FestivalCard
-          v-for="festival in filteredFestivals"
-          :key="festival.id"
-          :festival="festival"
-        />
+      <div class="festivals">
+        <div class="grid">
+          <FestivalCard
+            v-for="festival in filteredFestivals"
+            :key="festival.id"
+            :festival="festival"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="css" scoped>
-
 .filter-select {
   padding: 10px 14px;
   border-radius: 12px;
   border: 2px solid var(--color-primary);
   font-size: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin-bottom: 30px;
   cursor: pointer;
   background: white;
@@ -148,7 +152,7 @@ p {
   padding: var(--space-xl);
   max-width: 1200px;
   margin: 0 auto;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .searchbar-wrapper {
@@ -175,7 +179,7 @@ p {
   border: 2px solid var(--color-primary);
   border-radius: 12px;
   font-size: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .filter-btn {
@@ -206,5 +210,4 @@ p {
   gap: 24px;
   width: 100%;
 }
-
 </style>

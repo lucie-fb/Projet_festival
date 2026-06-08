@@ -1,62 +1,69 @@
 <script setup>
-import {ref, onMounted} from 'vue' 
-import {useSpotify} from '~/composables/useSpotify'
-import {useTicketmaster} from '~/composables/useTicketmaster'
-import FestivalCard from '../components/FestivalCard.vue';
+import { ref, onMounted } from "vue";
+import { useSpotify } from "~/composables/useSpotify";
+import { useTicketmaster } from "~/composables/useTicketmaster";
+import FestivalCard from "../components/FestivalCard.vue";
 
 definePageMeta({
-  middleware: 'auth'
-})
+  middleware: "auth",
+});
 
 const { top5 } = useSpotify();
 const { top5f } = useTicketmaster();
-const artists = ref ([]);
-const festivals = ref ([]);
+const artists = ref([]);
+const festivals = ref([]);
+const isLoading = ref(true);
 
-onMounted (async()=> {
-  artists.value = await top5()
-  festivals.value = await top5f()
-})
-
+onMounted(async () => {
+  artists.value = await top5();
+  festivals.value = await top5f();
+  isLoading.value = false;
+});
 </script>
 
 <template>
-<div class="page-container">
-   <div class="searchbar-wrapper">
-      <SearchBar v-model:query="searchTerm" @search="search" />
-    </div>
-
-    <p> Recherchez vos artistes favoris et voyez où ils performent !</p>
-    <p v-if="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </p>
-
-  <h2>Top 5 des artistes les plus écoutés</h2>
-<div class="artists">
-      <div class="grid">
-        <ArtistCard
-          v-for="artist in artists"
-          :key="artist.id"
-          :artist="artist"
-        />
+  <div class="page-container">
+    <div v-if="isLoading" class="loading-box">
+    <div class="spinner"></div>
+    <p>Chargement…</p>
+  </div>
+    <div v-else>
+      <div class="searchbar-wrapper">
+        <SearchBar v-model:query="searchTerm" @search="search" />
       </div>
-    </div>
 
-    <h2>Top 5 des festivals à venir</h2>
-<div class="festivals">
-      <div class="grid">
-        <FestivalCard
-          v-for="festival in festivals"
-          :key="festival.id"
-          :festival="festival"
-        />
+      <p>Recherchez vos artistes favoris et voyez où ils performent !</p>
+      <p v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </p>
+
+      <h2>Top 5 des artistes les plus écoutés</h2>
+      <div class="artists">
+        <div class="grid">
+          <ArtistCard
+            v-for="artist in artists"
+            :key="artist.id"
+            :artist="artist"
+          />
+        </div>
+      </div>
+
+      <h2>Top 5 des festivals à venir</h2>
+      <div class="festivals">
+        <div class="grid">
+          <FestivalCard
+            v-for="festival in festivals"
+            :key="festival.id"
+            :festival="festival"
+          />
+        </div>
       </div>
     </div>
   </div>
+  
 </template>
 
 <style lang="css" scoped>
-
 p {
   font-size: 1rem;
   font-style: italic;

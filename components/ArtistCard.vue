@@ -1,4 +1,6 @@
 <script setup>
+
+import { useRoute } from 'vue-router';
 const props = defineProps({
   artist: {
     type: Object,
@@ -7,8 +9,15 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const route = useRoute ();
 const clickArtists = () => {
-  router.push(`artists/[id]?name=${encodeURIComponent(props.artist.name)}`)
+
+if (route.path === "/artists") {
+    emit("select", props.artist.name)
+    return;
+
+}
+  router.push(`/artists/[id]?name=${encodeURIComponent(props.artist.name)}`)
 }
 </script>
 

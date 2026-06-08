@@ -5,9 +5,11 @@ definePageMeta({
 })
 
 const { user, loadUser } = useAuth();
+const isLoading = ref(true);
 
 onMounted(() => {
   loadUser();
+  isLoading.value = false
 });
 </script>
 
@@ -29,10 +31,10 @@ onMounted(() => {
           Supprimer mon compte
         </a>
       </div>
-
-      <div v-else class="account-info">
-        <p>Chargement…</p>
-      </div>
+      <div v-else="isLoading" class="loading-box">
+      <div class="spinner"></div>
+      <p>Chargement de votre compte…</p>
+    </div>
 
     </div>
   </div>

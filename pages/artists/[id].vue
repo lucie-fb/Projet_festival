@@ -15,7 +15,8 @@ const festivals = ref([]);
 const errorMessage = ref("");
 const route = useRoute();
 const { top20 } = useSpotify();
-const hasSearched = ref(false)
+const hasSearched = ref(false);
+const isLoading = ref(true);
 
 
 async function search() {
@@ -84,12 +85,17 @@ onMounted(async () => {
     searchTerm.value = route.query.name
     await search()
   }
+  isLoading.value = false;
 })
 
 </script>
 
 <template>
   <div class="page-container">
+    <div v-if="isLoading" class="loading-box">
+    <div class="spinner"></div>
+    <p>Chargement…</p>
+  </div>
     <div class="searchbar-wrapper">
       <SearchBar v-model:query="searchTerm" @search="search" />
     </div>

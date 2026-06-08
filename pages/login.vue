@@ -25,6 +25,7 @@ onMounted(() => {
       <div v-else class="login-content">
         <button class="btn-login" @click="login">Se connecter</button>
       </div>
+
     </div>
   </div>
 </template>
