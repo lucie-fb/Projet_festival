@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import { useSpotify } from "~/composables/useSpotify";
 import { useTicketmaster } from "~/composables/useTicketmaster";
 import FestivalCard from "../components/FestivalCard.vue";
+import { useI18n } from "vue-i18n";
+import ArtistCard from "~/components/ArtistCard.vue"
 
 definePageMeta({
   middleware: "auth",
@@ -13,10 +15,21 @@ const { top5f } = useTicketmaster();
 const artists = ref([]);
 const festivals = ref([]);
 const isLoading = ref(true);
+const searchTerm = ref("");
+const { t } = useI18n();
+const errorMessage = ref("")
+
+
+function search() {}
+
 
 onMounted(async () => {
-  artists.value = await top5();
-  festivals.value = await top5f();
+  try {
+    artists.value = await top5();
+    festivals.value = await top5f();
+  } catch (e) {
+    errorMessage.value = t("home.error");
+  }
   isLoading.value = false;
 });
 </script>
@@ -24,20 +37,21 @@ onMounted(async () => {
 <template>
   <div class="page-container">
     <div v-if="isLoading" class="loading-box">
-    <div class="spinner"></div>
-    <p>Chargement…</p>
-  </div>
+  <div class="pulse-loader"></div>
+  <p>{{ t('home.loading') }}</p>
+</div>
+
     <div v-else>
       <div class="searchbar-wrapper">
         <SearchBar v-model:query="searchTerm" @search="search" />
       </div>
 
-      <p>Recherchez vos artistes favoris et voyez où ils performent !</p>
+      <p>{{ t('home.subtitle') }}</p>
       <p v-if="errorMessage" class="error-message">
         {{ errorMessage }}
       </p>
 
-      <h2>Top 5 des artistes les plus écoutés</h2>
+      <h2>{{ t('home.topArtists') }}</h2>
       <div class="artists">
         <div class="grid">
           <ArtistCard
@@ -48,7 +62,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <h2>Top 5 des festivals à venir</h2>
+      <h2>{{ t('home.topFestivals') }}</h2>
       <div class="festivals">
         <div class="grid">
           <FestivalCard
@@ -124,4 +138,34 @@ h2 {
     transform: translateY(0);
   }
 }
+
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.pulse-loader {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.6; }
+}
+
+.loading-box p {
+  margin-top: 12px;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
 </style>

@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from "vue-i18n";
 
 definePageMeta({
   middleware: 'auth'
@@ -6,6 +7,7 @@ definePageMeta({
 
 const { user, loadUser } = useAuth();
 const isLoading = ref(true);
+const { t } = useI18n();
 
 onMounted(() => {
   loadUser();
@@ -17,24 +19,25 @@ onMounted(() => {
   <div class="account-page">
     <div class="account-box">
 
-      <h1 class="account-title">Mon Compte</h1>
+      <h1 class="account-title">{{ t('account.title') }}</h1>
 
       <div v-if="user" class="account-info">
-        <p><strong>Prénom :</strong> {{ user.profile.given_name }}</p>
-        <p><strong>Nom :</strong> {{ user.profile.family_name }}</p>
-        <p><strong>Email :</strong> {{ user.profile.email }}</p>
+        <p><strong>{{ t('account.firstname') }} :</strong> {{ user.profile.given_name }}</p>
+        <p><strong>{{ t('account.lastname') }} :</strong> {{ user.profile.family_name }}</p>
+        <p><strong>{{ t('account.email') }} :</strong> {{ user.profile.email }}</p>
 
         <a
           class="btn-danger"
           href="https://sun-and-sound-q7pe8b.eu1.zitadel.cloud/ui/console/users/me"
         >
-          Supprimer mon compte
+          {{ t('account.delete') }}
         </a>
       </div>
       <div v-else="isLoading" class="loading-box">
-      <div class="spinner"></div>
-      <p>Chargement de votre compte…</p>
-    </div>
+  <div class="pulse-loader"></div>
+  <p>{{ t('account.loading') }}</p>
+</div>
+
 
     </div>
   </div>
@@ -127,6 +130,35 @@ onMounted(() => {
 
 .btn-danger:hover {
   background: #ffd6f4;
+}
+
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.pulse-loader {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.6; }
+}
+
+.loading-box p {
+  margin-top: 12px;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
 </style>

@@ -1,4 +1,9 @@
 <script setup>
+import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 const props = defineProps({
   festival: {
     type: Object,
@@ -11,12 +16,24 @@ const flipped = ref(false)
 function toggleFlip() {
   flipped.value = !flipped.value
 }
+
+const emit = defineEmits(['select'])
+const router = useRouter()
+const route = useRoute()
+
+const clickFestivals = () => {
+  if (route.path === '/festivals') {
+    emit('select', props.festival.name)
+    return
+  }
+  router.push(`/festivals?name=${encodeURIComponent(props.festival.name)}`)
+}
+
+const { t } = useI18n()
 </script>
 
 <template>
-  <article class="card" :class="{ flipped }">
-    
-    <!-- FACE AVANT -->
+  <article class="card" :class="{ flipped }" @click="clickFestivals">
     <div class="front">
       <img class="banner" :src="festival.image" :alt="festival.name" />
 
@@ -30,28 +47,27 @@ function toggleFlip() {
         </p>
 
         <button class="btn" @click.stop="toggleFlip">
-          Voir la programmation
+          {{ t('festival.viewProgram') }}
         </button>
       </div>
     </div>
 
-    <!-- FACE ARRIÈRE -->
     <div class="back">
-      <p v-if="festival.lineup.length === 0">
-        Aucune programmation disponible
+      <p v-if="!festival.lineup || festival.lineup.length === 0">
+        {{ t('festival.noProgram') }}
       </p>
 
       <p v-else class="artists">
-        {{ festival.lineup.map(a => a.name).join(" — ") }}
+        {{ festival.lineup.map(a => a.name).join(' — ') }}
       </p>
 
       <button class="btn" @click.stop="toggleFlip">
-        Retour
+        {{ t('festival.back') }}
       </button>
     </div>
-
   </article>
 </template>
+
 
 <style lang="css" scoped>
 

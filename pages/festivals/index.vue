@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useTicketmaster } from "~/composables/useTicketmaster";
 import FestivalCard from "../components/FestivalCard.vue";
+import { useI18n } from "vue-i18n";
 
 definePageMeta({
   middleware: "auth",
@@ -17,6 +18,8 @@ const selectedGenre = ref("");
 const { top20f } = useTicketmaster();
 const route = useRoute();
 const isLoading = ref(true);
+const hasSearched = ref(false);
+const { t } = useI18n();
 
 const filteredFestivals = computed(() => {
   if (!selectedGenre.value) return festivals.value;
@@ -33,7 +36,7 @@ async function search() {
   hasSearched.value = true;
 
   if (!searchTerm.value.trim()) {
-    errorMessage.value = "Merci de saisir un nom de festival.";
+    errorMessage.value = t("festival.enterName");
     return;
   }
 
@@ -46,7 +49,6 @@ async function search() {
     });
 
     allFestivals.value = result;
-    allFestivals.value = festivals.value;
     festivals.value = result;
 
     await $fetch("/api/festivals/save", {
@@ -55,7 +57,7 @@ async function search() {
     });
   } catch (error) {
     console.error(error);
-    errorMessage.value = "Une erreur est survenue lors de la recherche.";
+    errorMessage.value = t("festival.searchError");
   }
 }
 
@@ -84,36 +86,39 @@ onMounted(async () => {
 <template>
   <div class="festival-page">
     <div v-if="isLoading" class="loading-box">
-      <div class="spinner"></div>
-      <p>Chargement…</p>
+      <div class="pulse-loader"></div>
+      <p>{{ t('festival.loading') }}</p>
     </div>
+
     <div v-else>
-    <div class="searchbar-wrapper">
-      <SearchBar v-model:query="searchTerm" @search="search" />
-    </div>
+      <div class="searchbar-wrapper">
+        <SearchBar v-model:query="searchTerm" @search="search" />
+      </div>
 
-    <p>Recherchez le festival de votre choix</p>
+      <p>{{ t('festival.searchPrompt') }}</p>
 
-    <p v-if="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </p>
+      <p v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </p>
 
-    <div class="filter-row">
-      <input v-model="filterDate" type="date" class="filter-date" />
-      <button class="filter-btn" @click="applyFilter">Filtrer par date</button>
-    </div>
+      <div class="filter-row">
+        <input v-model="filterDate" type="date" class="filter-date" />
+        <button class="filter-btn" @click="applyFilter">
+          {{ t('festival.filterByDate') }}
+        </button>
+      </div>
 
-    <select v-model="selectedGenre" class="filter-select">
-      <option value="">Tous les genres</option>
-      <option value="Rock">Rock</option>
-      <option value="Pop">Pop</option>
-      <option value="Electronic">Electro</option>
-      <option value="Hip-Hop">Hip-Hop</option>
-      <option value="Jazz">Jazz</option>
-    </select>
-    
-      <h1 v-if="!hasSearched">Top 20 des festivals à venir</h1>
-      <h1 v-else>Festivals trouvés</h1>
+      <select v-model="selectedGenre" class="filter-select">
+        <option value="">{{ t('festival.allGenres') }}</option>
+        <option value="Rock">{{ t('genres.rock') }}</option>
+        <option value="Pop">{{ t('genres.pop') }}</option>
+        <option value="Electronic">{{ t('genres.electronic') }}</option>
+        <option value="Hip-Hop">{{ t('genres.hiphop') }}</option>
+        <option value="Jazz">{{ t('genres.jazz') }}</option>
+      </select>
+
+      <h1 v-if="!hasSearched">{{ t('festival.top20') }}</h1>
+      <h1 v-else>{{ t('festival.results') }}</h1>
 
       <div class="festivals">
         <div class="grid">
@@ -210,4 +215,34 @@ p {
   gap: 24px;
   width: 100%;
 }
+
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.pulse-loader {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.6; }
+}
+
+.loading-box p {
+  margin-top: 12px;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
 </style>

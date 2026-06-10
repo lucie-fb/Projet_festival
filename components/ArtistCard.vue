@@ -1,6 +1,8 @@
 <script setup>
 
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n'
+
 const props = defineProps({
   artist: {
     type: Object,
@@ -10,6 +12,8 @@ const props = defineProps({
 
 const router = useRouter();
 const route = useRoute ();
+const emit = defineEmits(['select'])
+const { t } = useI18n()
 const clickArtists = () => {
 
 if (route.path === "/artists") {
@@ -23,7 +27,7 @@ if (route.path === "/artists") {
 
 <template>
   <article class="card artist-card" @click="clickArtists">
-    <img :src="artist.image" :alt="artist.name" />
+    <img :src="artist.image" :alt="t('artist.alt', { name: artist.name })" />
     <h2>{{ artist.name }}</h2>
   </article>
 </template>

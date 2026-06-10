@@ -1,0 +1,69 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "artists": "Artistes",
+    "festivals": "Festivals",
+    "favorites": "Liste Favoris",
+    "account": "Mon Compte",
+    "logout": "Déconnexion"
+  },
+  "search": {
+    "placeholder": "Recherche…",
+    "artists": "Recherchez vos artistes favoris et voyez où ils performent !",
+    "error": "Une erreur est survenue lors de la recherche.",
+    "alt": "Bouton de recherche"
+  },
+  "titles": {
+    "topArtists": "Top 20 des artistes les plus écoutés",
+    "artistFound": "Artiste trouvé",
+    "festivalsFound": "Festivals où il performe"
+  },
+  "loading": {
+    "artists": "Chargement des artistes…"
+  },
+  "festival": {
+    "loading": "Chargement des festivals…",
+    "searchPrompt": "Recherchez le festival de votre choix",
+    "enterName": "Merci de saisir un nom de festival.",
+    "searchError": "Une erreur est survenue lors de la recherche.",
+    "filterByDate": "Filtrer par date",
+    "allGenres": "Tous les genres",
+    "top20": "Top 20 des festivals à venir",
+    "results": "Festivals trouvés",
+    "viewProgram": "Voir la programmation",
+    "noProgram": "Aucune programmation disponible",
+    "back": "Retour"
+  },
+  "genres": {
+    "rock": "Rock",
+    "pop": "Pop",
+    "electronic": "Electro",
+    "hiphop": "Hip-Hop",
+    "jazz": "Jazz"
+  },
+  "account": {
+    "title": "Mon Compte",
+    "firstname": "Prénom",
+    "lastname": "Nom",
+    "email": "Email",
+    "delete": "Supprimer mon compte",
+    "loading": "Chargement du compte…"
+  },
+  "home": {
+    "loading": "Chargement de la page d'accueil…",
+    "subtitle": "Recherchez vos artistes favoris et voyez où ils performent !",
+    "error": "Une erreur est survenue lors du chargement.",
+    "topArtists": "Top 5 des artistes les plus écoutés",
+    "topFestivals": "Top 5 des festivals à venir"
+  },
+  "artist": {
+    "alt": "Photo de l’artiste {name}"
+  },
+  "login": {
+    "welcome": "Bienvenue sur",
+    "logoAlt": "Logo du site Sun and Sound",
+    "loggedInAs": "Connecté en tant que",
+    "logout": "Se déconnecter",
+    "login": "Se connecter"
+  }
+}

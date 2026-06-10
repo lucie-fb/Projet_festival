@@ -1,27 +1,43 @@
 <script setup>
 import { ref } from "vue";
+import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { useI18n } from "vue-i18n";
 
 const query = defineModel('query')
 const emit = defineEmits(['search'])
+const router = useRouter();
+const route = useRoute();
+const localePath = useLocalePath();
+const props = defineProps({})
+const { t } = useI18n();
+
+function onSearch() {
+  if (route.path.includes('/artists') || route.path.includes('/festivals')) {
+    emit("search")
+    return;
+  }
+  router.push(localePath(`/artists/[id]?name=${encodeURIComponent(query.value)}`))
+}
 </script>
 
 <template>
   <div class="searchbar">
-    <input 
-      type="search" 
-      placeholder="Recherche…" 
+    <input
+      type="search"
+      :placeholder="t('search.placeholder')"
       v-model="query"
-      @keyup.enter="$emit('search')"
+      @keyup.enter="onSearch"
       class="search-input"
     />
 
-    <button class="search-btn" @click="emit('search')">
-      <img 
-        width="16" 
-        height="16" 
-        alt="Bouton de recherche" 
+    <button class="search-btn" @click="onSearch">
+      <img
+        width="16"
+        height="16"
+        :alt="t('search.alt')"
         src="/images/icon_search.png"
-      >
+      />
     </button>
   </div>
 </template>

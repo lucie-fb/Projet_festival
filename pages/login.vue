@@ -1,5 +1,9 @@
 <script setup>
+
+import { useI18n } from "vue-i18n";
+
 const { user, login, logout, loadUser } = useAuth();
+const { t } = useI18n();
 
 onMounted(() => {
   loadUser();
@@ -9,21 +13,21 @@ onMounted(() => {
 <template>
   <div class="login-page">
     <div class="login-box">
-      <h1 class="login-title">Bienvenue sur</h1>
+      <h1 class="login-title">{{ t('login.welcome') }}</h1>
 
       <img
-        alt="Logo du site Sun and Sound"
+        alt="t('login.logoAlt')"
         src="/public/images/logo_sun&sound.png"
         class="login-logo"
       />
 
       <div v-if="user" class="login-content">
-        <p class="login-text">Connecté en tant que {{ user.profile.email }}</p>
-        <button class="btn-login" @click="logout">Se déconnecter</button>
+        <p class="login-text">{{ t('login.loggedInAs') }} {{ user.profile.email }}</p>
+        <button class="btn-login" @click="logout">{{ t('login.logout') }}</button>
       </div>
 
       <div v-else class="login-content">
-        <button class="btn-login" @click="login">Se connecter</button>
+        <button class="btn-login" @click="login">{{ t('login.login') }}</button>
       </div>
 
     </div>

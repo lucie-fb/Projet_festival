@@ -3,7 +3,9 @@ import { ref } from "vue";
 import ArtistCard from "~/components/ArtistCard.vue";
 import FestivalCard from "~/components/FestivalCard.vue";
 import { useRoute } from "vue-router";
-import {useSpotify} from '~/composables/useSpotify'
+import { useSpotify } from "~/composables/useSpotify";
+import { useI18n } from "vue-i18n"
+
 
 definePageMeta({
   middleware: "auth",
@@ -17,11 +19,12 @@ const route = useRoute();
 const { top20 } = useSpotify();
 const hasSearched = ref(false);
 const isLoading = ref(true);
+const { t } = useI18n() 
 
 
 async function search() {
   errorMessage.value = "";
-  hasSearched.value = true
+  hasSearched.value = true;
 
   if (!searchTerm.value.trim()) {
     errorMessage.value = "Merci de saisir un nom d'artiste.";
@@ -78,36 +81,36 @@ async function search() {
   }
 }
 onMounted(async () => {
-   if (!route.query.name) {
+  if (!route.query.name) {
     artists.value = await top20();
   }
   if (route.query.name) {
-    searchTerm.value = route.query.name
-    await search()
+    searchTerm.value = route.query.name;
+    await search();
   }
   isLoading.value = false;
-})
-
+});
 </script>
 
 <template>
   <div class="page-container">
-    <div v-if="isLoading" class="loading-box">
-    <div class="spinner"></div>
-    <p>Chargement…</p>
-  </div>
     <div class="searchbar-wrapper">
       <SearchBar v-model:query="searchTerm" @search="search" />
     </div>
 
-    <p> Recherchez vos artistes favoris et voyez où ils performent !</p>
+    <p>{{ t('search.artists') }}</p>
+
     <p v-if="errorMessage" class="error-message">
-      {{ errorMessage }}
+      {{ t('search.error') }}
     </p>
 
-    <h1 v-if="!hasSearched">Top 20 des artistes les plus écoutés</h1>
-    <h1 v-else>Artiste trouvé</h1>
+    <div v-if="isLoading" class="loading-box">
+      <div class="pulse-loader"></div>
+      <p>{{ t('loading.artists') }}</p>
+    </div>
 
+    <h1 v-if="!hasSearched">{{ t('titles.topArtists') }}</h1>
+    <h1 v-else>{{ t('titles.artistFound') }}</h1>
 
     <div class="artists">
       <div class="grid">
@@ -119,7 +122,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <h1 v-if="festivals.length">Festivals où il performe</h1>
+    <h1 v-if="festivals.length">{{ t('titles.festivalsFound') }}</h1>
     <div class="festivals">
       <div class="grid">
         <FestivalCard
@@ -164,4 +167,34 @@ p {
   gap: 24px;
   margin-top: 16px;
 }
+
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.pulse-loader {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.6; }
+}
+
+.loading-box p {
+  margin-top: 12px;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
 </style>

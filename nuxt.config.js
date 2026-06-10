@@ -3,20 +3,20 @@ export default defineNuxtConfig({
   
   modules: ['nuxt-snackbar', '@nuxtjs/i18n'],
 
-  //CLient
+  // Client
   auth: {
-      baseURL: '/api/auth',
-      provider: {
-        type: 'zitadel',
-        options:{
-          baseUrl: process.env.VITE_ZITADEL_ISSUER,
-          clientId: process.env.VITE_ZITADEL_CLIENT_ID,
-          clientSecret: '',
-          redirectUri: 'http://localhost:3000/auth/callback',
-          logoutRedirectUri: 'http://localhost:3000/'
-        }
+    baseURL: '/api/auth',
+    provider: {
+      type: 'zitadel',
+      options: {
+        baseUrl: process.env.VITE_ZITADEL_ISSUER,
+        clientId: process.env.VITE_ZITADEL_CLIENT_ID,
+        clientSecret: '',
+        redirectUri: 'http://localhost:3000/auth/callback',
+        logoutRedirectUri: 'http://localhost:3000/'
       }
-    },
+    }
+  },
 
   // Serveur
   runtimeConfig: {
@@ -28,11 +28,26 @@ export default defineNuxtConfig({
     VITE_ZITADEL_CLIENT_ID: process.env.VITE_ZITADEL_CLIENT_ID,
   },
 
+  // i18n
   i18n: {
+    strategy: 'prefix_except_default',
+    defaultLocale: 'fr',
+    langDir: 'locales/',
+    lazy: true,
+    detectBrowserLanguage: false,
     locales: [
-      { code: 'en', language: 'en-US' },
-      { code: 'fr', language: 'fr-FR' }
-    ],
-    defaultLocale: 'en',
+      {
+        code: 'fr',
+        iso: 'fr-FR',
+        name: 'Français',
+        file: 'fr.json'
+      },
+      {
+        code: 'en',
+        iso: 'en-US',
+        name: 'English',
+        file: 'en.json'
+      }
+    ]
   }
 })

@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     } else if (localDateTime){
       normalizedDate = localDateTime.slice(0, 10)
     } else if (dateTime) {
-      normalized = date.Time.slice(0,10)
+      normalizedDate = dateTime.slice(0, 10)
     }
 
     return {
