@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   css: ['@/assets/styles/main.css'],
   
-  modules: ['nuxt-snackbar', '@nuxtjs/i18n'],
+  modules: ['@nuxtjs/i18n'],
 
   // Client
   auth: {

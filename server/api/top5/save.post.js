@@ -1,37 +1,69 @@
 import { db } from "~/server/db";
 import { festivals, top5 } from "../../db/schema";
+import { z } from "zod";
+
+const LineupSchema = z.object({
+  id: z.string(),
+  name: z.string()
+});
+
+const CategorySchema = z.object({
+  segment: z.string().nullable(),
+  genre: z.string().nullable(),
+  subGenre: z.string().nullable()
+});
+
+const FestivalSchema = z.object({
+  image: z.string().nullable(),
+  name: z.string(),
+  source: z.literal("ticketmaster"),
+  date: z.string().nullable(),
+  city: z.string().nullable(),
+  country: z.string().nullable(),
+  lineup: z.array(LineupSchema),
+  categories: z.array(CategorySchema)
+});
+
+const BodySchema = z.object({
+  top5: z.array(FestivalSchema)
+});
 
 export default defineEventHandler(async (event) => {
+
+  try{
   const body = await readBody(event);
 
-  if (!body.top5 || !Array.isArray(body.top5)) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid body"
-    });
-  }
+  const parsed = BodySchema.parse(body);
 
-  const rows = body.top5.map(f => ({
-    image: f.image || null,
-    name: f.name || null,
-    source: "ticketmaster",
-    date: f.dates?.start?.localDate || null,
-    city: f._embedded?.venues?.[0]?.city?.name || null,
-    country: f._embedded?.venues?.[0]?.country?.name || null,
-
-    lineup: f._embedded?.attractions?.map(a => ({
-      name: a.name,
-      id: a.id
-    })) || [],
-
-    categories: f.classifications?.map(c => ({
-      segment: c.segment?.name || null,
-      genre: c.genre?.name || null,
-      subGenre: c.subGenre?.name || null
-    })) || []
+  const rows = parsed.top5.map(f => ({
+    image: f.image,
+      name: f.name,
+      source: f.source,
+      date: f.date,
+      city: f.city,
+      country: f.country,
+      lineup: f.lineup,
+      categories: f.categories
   }))
 
   const result = await db.insert(festivals).values(rows).onConflictDoNothing().returning();
 
   return { inserted: result.length };
+
+} catch (error){
+  console.error("Erreur festivals/save", error);
+  
+    if (error instanceof z.ZodError){
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Données invalides",
+        data: error.errors
+      })
+    }
+  
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Erreur lors de l'enregistrement des festivals",
+    })
+  }
 });

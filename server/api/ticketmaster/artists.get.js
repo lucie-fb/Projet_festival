@@ -1,22 +1,20 @@
 export default defineEventHandler(async (event) => {
   const { name } = getQuery(event)
-  const config = useRuntimeConfig()
+  const config = useRuntimeConfig(event)
 
   try{
   const url = `https://app.ticketmaster.com/discovery/v2/attractions.json?keyword=${encodeURIComponent(name)}&apikey=${config.TM_KEY}`
 
   const data = await $fetch(url)
 
-  if (!events) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: "Aucun artiste festival trouvé pour cette recherche"
-      });
+ const attractions = data._embedded?.attractions || []
 
+  if (!attractions.length) {
+      return []
     }
   
 
-  return data._embedded?.attractions?.map(a => ({
+  return attractions.map(a => ({
     id: a.id,
     name: a.name,
     image: a.images?.[0]?.url || null

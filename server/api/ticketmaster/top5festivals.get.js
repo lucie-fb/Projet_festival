@@ -1,5 +1,5 @@
-export default defineEventHandler(async () => {
-  const config = useRuntimeConfig()
+export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig(event)
 
   const url = `https://app.ticketmaster.com/discovery/v2/events.json?keyword=festival&sort=date,asc&apikey=${config.TM_KEY}`
 
@@ -8,7 +8,7 @@ export default defineEventHandler(async () => {
 
     const events = data._embedded?.events || []
 
-    if (!events) {
+    if (!events.length) {
       throw createError({
         statusCode: 404,
         statusMessage: "Aucun festival trouvé pour cette recherche"

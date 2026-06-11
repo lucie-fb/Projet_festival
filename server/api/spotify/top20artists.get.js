@@ -1,4 +1,3 @@
-import { albums } from "../../db/schema"
 import { spotifyToken } from "../../utils/spotifyToken.get"
 
 export default defineEventHandler(async () => {
@@ -9,6 +8,11 @@ export default defineEventHandler(async () => {
 
   const [page1, page2] = await Promise.all([
   $fetch(`${searchUrl}&offset=0`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  }),
+  $fetch(`${searchUrl}&offset=10`, {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }

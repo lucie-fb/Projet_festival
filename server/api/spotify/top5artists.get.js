@@ -1,4 +1,3 @@
-import { albums } from "../../db/schema"
 import { spotifyToken } from "../../utils/spotifyToken.get"
 
 export default defineEventHandler(async () => {
@@ -26,7 +25,7 @@ export default defineEventHandler(async () => {
     image: a.images?.[0]?.url || null,
     id: a.id,
     name: a.name,
-    genres: a.genre,
+    genres: a.genres,
     followers: a.followers?.total||0,
     popularity: a.popularity,
     source: "spotify"

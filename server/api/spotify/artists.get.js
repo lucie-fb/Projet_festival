@@ -6,6 +6,14 @@ export default defineEventHandler(async (event) => {
 
   try{
   const {name} = getQuery(event)
+
+  if (!name) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Le paramètre 'name' est requis"
+      });
+    }
+
   const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(name)}&type=artist&limit=1`
 
   const data = await $fetch(searchUrl, {
@@ -16,7 +24,7 @@ export default defineEventHandler(async (event) => {
 
   const items = data?.artists?.items || [];
 
-  if (!items.length) {
+  if (items.length === 0) {
       throw createError({
         statusCode: 404,
         statusMessage: "Aucun artiste trouvé pour cette recherche"
@@ -40,7 +48,7 @@ catch (error){
 
     throw createError({
       statusCode: 500,
-      statusMessage: "Erreur interne lors de la récupération des artistes"
+      statusMessage: "Erreur interne lors de la recuperation des artistes"
     });
 }
 })
