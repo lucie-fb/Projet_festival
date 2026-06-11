@@ -8,6 +8,14 @@ export default defineEventHandler(async () => {
 
     const events = data._embedded?.events || []
 
+    if (!events) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: "Aucun festival trouvé pour cette recherche"
+      });
+
+    }
+
     return events.slice(0, 30).map(e => ({
       id: e.id,
       name: e.name,
@@ -29,7 +37,15 @@ export default defineEventHandler(async () => {
     }))
 
   } catch (error) {
-    console.error("Ticketmaster error:", error)
-    return []
+    console.error("Erreur Ticketmaster", error);
+
+    if (error.statusCode) {
+      throw error;
+    }
+
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Erreur interne lors de la récupération du top20 des festivals"
+    });
   }
 })

@@ -1,13 +1,21 @@
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-
   const {festival} = getQuery(event)
 
+  try{
   const data = await $fetch(
     `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${config.TM_KEY}&classificationName=festival&keyword=${encodeURIComponent(festival)}&size=50&include=attractions,venues`
   )
 
   const events = data._embedded?.events || []
+
+  if (!events) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: "Aucun festival trouvé pour cette recherche"
+      });
+
+    }
 
   return events.map(e => {
     const localDate = e.dates?.start?.localDate
@@ -36,6 +44,19 @@ export default defineEventHandler(async (event) => {
       name: a.name,
       image: a.images?.[0]?.url || null
     })) || []
+    };
+  });
+
+} catch (error){
+    console.error("Erreur Ticketmaster", error);
+
+    if (error.statusCode) {
+      throw error;
     }
-  })
+
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Erreur interne lors de la récupération des festivals et des artistes"
+    });
+  }
 })
