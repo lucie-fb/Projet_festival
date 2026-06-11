@@ -1,9 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import ArtistCard from "~/components/ArtistCard.vue";
 import FestivalCard from "~/components/FestivalCard.vue";
 import { useRoute } from "vue-router";
-import { useSpotify } from "~/composables/useSpotify";
+import { useApi } from "~/composables/useApi";
 import { useI18n } from "vue-i18n"
 
 
@@ -16,7 +16,7 @@ const artists = ref([]);
 const festivals = ref([]);
 const errorMessage = ref("");
 const route = useRoute();
-const { top20 } = useSpotify();
+const { top20 } = useApi();
 const hasSearched = ref(false);
 const isLoading = ref(true);
 const { t } = useI18n() 

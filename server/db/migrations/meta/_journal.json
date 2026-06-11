@@ -8,6 +8,13 @@
       "when": 1780923620672,
       "tag": "0000_mighty_dagger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781098703874,
+      "tag": "0001_nervous_firestar",
+      "breakpoints": true
     }
   ]
 }

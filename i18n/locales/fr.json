@@ -64,6 +64,7 @@
     "logoAlt": "Logo du site Sun and Sound",
     "loggedInAs": "Connecté en tant que",
     "logout": "Se déconnecter",
+    "loading": "Connexion en cours…",
     "login": "Se connecter"
   }
 }

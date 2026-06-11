@@ -19,7 +19,7 @@ const localePath = useLocalePath()
     </nav>
 
     <div class="navbar-right">
-      <select :value="locale" @change="setLocale($event.target.value)" class="lang-select">
+      <select v-model="locale" @change="setLocale($event.target.value)" class="lang-select">
         <option 
           v-for="l in locales" 
           :key="l.code" 

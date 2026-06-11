@@ -1,7 +1,6 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { useSpotify } from "~/composables/useSpotify";
-import { useTicketmaster } from "~/composables/useTicketmaster";
+import { ref } from "vue";
+import { useApi } from "~/composables/useApi";
 import FestivalCard from "../components/FestivalCard.vue";
 import { useI18n } from "vue-i18n";
 import ArtistCard from "~/components/ArtistCard.vue"
@@ -10,8 +9,7 @@ definePageMeta({
   middleware: "auth",
 });
 
-const { top5 } = useSpotify();
-const { top5f } = useTicketmaster();
+const { top5, top5f } = useApi();
 const artists = ref([]);
 const festivals = ref([]);
 const isLoading = ref(true);

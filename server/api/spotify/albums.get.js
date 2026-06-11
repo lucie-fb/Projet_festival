@@ -1,19 +1,7 @@
+import { spotifyToken } from "../../utils/spotifyToken.get"
+
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig()
-
-  const tokenResponse = await $fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: new URLSearchParams({
-      grant_type: "client_credentials",
-      client_id: config.SPOTIFY_ID,
-      client_secret: config.SPOTIFY_KEY
-    })
-  })
-
-  const accessToken = tokenResponse.access_token
+  const accessToken = await spotifyToken();
 
   const {id} = getQuery(event)
   const safeId = encodeURIComponent(id)

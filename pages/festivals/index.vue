@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRoute } from "vue-router";
-import { useTicketmaster } from "~/composables/useTicketmaster";
+import { useApi } from "~/composables/useApi";
 import FestivalCard from "../components/FestivalCard.vue";
 import { useI18n } from "vue-i18n";
 
@@ -15,7 +15,7 @@ const festivals = ref([]);
 const allFestivals = ref([]);
 const errorMessage = ref("");
 const selectedGenre = ref("");
-const { top20f } = useTicketmaster();
+const { top20f } = useApi();
 const route = useRoute();
 const isLoading = ref(true);
 const hasSearched = ref(false);
