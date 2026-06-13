@@ -9,7 +9,7 @@ onMounted(async () => {
   await nextTick()
 
   // 1. Finir le login OIDC
-  await nuxtApp.$oidc.signinCallback()
+  await nuxtApp.$oidc.signinRedirectCallback()
 
   // 2. Charger l'utilisateur
   await loadUser()
@@ -20,5 +20,73 @@ onMounted(async () => {
 </script>
 
 <template>
-  <p>Connexion en cours...</p>
+  <div class="loading-connection">
+  <div class="loading-spinner"></div>
+  <p class="loading-text">Connexion en cours…</p>
+</div>
+
 </template>
+
+<style lang="css" scoped>
+.loading-connection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  gap: 20px;
+  animation: fadeIn 0.4s ease;
+}
+
+/* Cercle animé */
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 5px solid rgba(255, 192, 238, 0.3); /* rose clair transparent */
+  border-top-color: #FFC0EE; /* rose clair */
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 12px rgba(255, 192, 238, 0.6);
+}
+
+/* Texte animé */
+.loading-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.5px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* Rotation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Apparition douce */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Effet pulsation du texte */
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+</style>

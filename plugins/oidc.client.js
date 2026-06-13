@@ -17,6 +17,15 @@ export default defineNuxtPlugin(() => {
 
   })
 
+
+  manager.events.addUserLoaded(user => {
+  document.cookie = `id_token=${user.id_token}; path=/; samesite=lax`;
+});
+
+manager.events.addUserUnloaded(() => {
+  document.cookie = "id_token=; Max-Age=0; path=/";
+});
+
   return {
     provide: {
       oidc: manager

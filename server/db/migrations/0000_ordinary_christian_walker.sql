@@ -12,6 +12,16 @@ CREATE TABLE "artists" (
 	"source" text
 );
 --> statement-breakpoint
+CREATE TABLE "favorites" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"image" text,
+	"userId" text NOT NULL,
+	"itemId" text NOT NULL,
+	"itemType" text NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "festivals" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text,
