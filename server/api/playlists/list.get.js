@@ -1,21 +1,34 @@
 import { db } from "~/server/db"
-import { playlists, playlistItems } from "~/server/db/schema"
-import { eq } from "drizzle-orm"
+import { playlists } from "~/server/db/schema"
+import { eq, and } from "drizzle-orm"
 import { getUserId } from "~/server/utils/auth"
+import { getCookie } from "h3"
 
 export default defineEventHandler(async (event) => {
+  const token = getCookie(event, "id_token")
+  if (!token) return { default: null, playlists: [] }
+
   const userId = getUserId(event)
+  if (!userId) return { default: null, playlists: [] }
 
-  const allPlaylists = await db
-  .select()
-  .from(playlists)
-  .where(eq(playlists.userId, userId))
+  const defaultPlaylist = await db
+    .select()
+    .from(playlists)
+    .where(and(
+      eq(playlists.userId, userId),
+      eq(playlists.isDefault, true)
+    ))
 
-  const defaultPlaylist = allPlaylists.find(p=>p.isDefault)
-  const userPlaylists = allPlaylists.filter(p=>!p.isDefault)
+  const userPlaylists = await db
+    .select()
+    .from(playlists)
+    .where(and(
+      eq(playlists.userId, userId),
+      eq(playlists.isDefault, false)
+    ))
 
   return {
-    default: defaultPlaylist,
+    default: defaultPlaylist[0] || null,
     playlists: userPlaylists
   }
 })

@@ -74,6 +74,7 @@ onMounted(async () => {
   
 </template>
 
+
 <style lang="css" scoped>
 p {
   font-size: 1rem;
@@ -163,6 +164,57 @@ h2 {
   font-size: 1.1rem;
   color: var(--color-primary);
   font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .page-container {
+    padding: 40px 20px;
+  }
+
+  h2 {
+    font-size: 1.7rem;
+  }
+
+  .artists .grid,
+  .festivals .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+/* 📱 Mobiles */
+@media (max-width: 600px) {
+  .page-container {
+    padding: 30px 16px;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    margin-top: 1.4rem;
+    margin-bottom: 1.4rem;
+  }
+
+  p {
+    font-size: 0.95rem;
+  }
+
+  .artists .grid,
+  .festivals .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* 📱 Très petits écrans */
+@media (max-width: 400px) {
+  .artists .grid,
+  .festivals .grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
 }
 
 </style>

@@ -131,7 +131,6 @@ definePageMeta({ middleware: "auth" })
   font-weight: 700;
 }
 
-/* Formulaire création playlist */
 .create-playlist {
   display: flex;
   gap: 10px;
@@ -161,7 +160,6 @@ definePageMeta({ middleware: "auth" })
   background: var(--color-secondary);
 }
 
-/* Grille playlists */
 .playlists,
 .default-playlist {
   display: grid;
@@ -170,31 +168,74 @@ definePageMeta({ middleware: "auth" })
   margin-bottom: 40px;
 }
 
-@media (max-width: 1200px) {
-  .playlists,
-  .default-playlist {
-    grid-template-columns: repeat(4, 1fr);
+@media (max-width: 1024px) {
+  .favorites-page {
+    padding: 16px;
   }
-}
 
-@media (max-width: 900px) {
+  .favorites-page h1 {
+    font-size: 1.7rem;
+    margin-bottom: 24px;
+  }
+
+  .create-playlist input {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+  }
+
+  .create-playlist button {
+    padding: 8px 14px;
+    font-size: 0.95rem;
+  }
+
   .playlists,
   .default-playlist {
     grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
   }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 600px) {
+  .favorites-page {
+    padding: 14px;
+  }
+
+  .favorites-page h1 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .create-playlist {
+    flex-direction: column;
+  }
+
+  .create-playlist input {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .create-playlist button {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
   .playlists,
   .default-playlist {
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 }
 
-@media (max-width: 450px) {
+@media (max-width: 400px) {
+  .favorites-page h1 {
+    font-size: 1.3rem;
+  }
+
   .playlists,
   .default-playlist {
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
 </style>

@@ -44,14 +44,13 @@ const localePath = useLocalePath()
   padding: 16px 40px;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Logo à gauche, menu centré */
+  justify-content: space-between;
   box-shadow: var(--shadow-soft);
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
-/* Logo */
 .navbar-left {
   display: flex;
   align-items: center;
@@ -61,31 +60,27 @@ const localePath = useLocalePath()
   width: 55px;
 }
 
-/* Menu centré */
 .navbar-center {
   display: flex;
   gap: 32px;
-  margin: 0 auto; /* Centre le bloc */
+  margin: 0 auto;
 }
 
-/* Liens */
 .navbar-center a {
   color: var(--color-white);
   text-decoration: none;
-  font-weight: 600; /* Texte en gras */
+  font-weight: 600;
   font-size: 1rem;
   padding: 8px 14px;
   border-radius: 10px;
   transition: 0.2s ease;
 }
 
-/* Hover */
 .navbar-center a:hover {
   background: var(--color-secondary);
   color: var(--color-primary);
 }
 
-/* Lien actif */
 .navbar-center .router-link-active {
   background: var(--color-white);
   color: var(--color-primary);
@@ -112,4 +107,80 @@ const localePath = useLocalePath()
 .lang-select:hover {
   background: #ffd6f4;
 }
+
+@media (max-width: 900px) {
+  .navbar {
+    padding: 14px 24px;
+  }
+
+  .navbar-center {
+    gap: 20px;
+  }
+
+  .navbar-center a {
+    font-size: 0.95rem;
+    padding: 6px 10px;
+  }
+
+  .login-logo {
+    width: 48px;
+  }
+}
+
+@media (max-width: 700px) {
+  .navbar {
+    padding: 12px 20px;
+  }
+
+  .navbar-center {
+    display: none;
+  }
+
+  .navbar::after {
+    content: "☰";
+    font-size: 1.8rem;
+    color: white;
+    cursor: pointer;
+    margin-left: auto;
+  }
+
+  .navbar.open .navbar-center {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: var(--color-primary);
+    padding: 20px 0;
+    gap: 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    z-index: 999;
+  }
+
+  .navbar-center a {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+  }
+
+  .lang-select {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .login-logo {
+    width: 42px;
+  }
+
+  .navbar::after {
+    font-size: 1.6rem;
+  }
+
+  .lang-select {
+    font-size: 0.85rem;
+  }
+}
+
 </style>

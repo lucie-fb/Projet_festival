@@ -1,5 +1,5 @@
 import { db } from "~/server/db";
-import { festivals, top5 } from "../../db/schema";
+import { top5 } from "../../db/schema";
 import { z } from "zod";
 
 const LineupSchema = z.object({
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
       categories: f.categories
   }))
 
-  const result = await db.insert(festivals).values(rows).onConflictDoNothing().returning();
+  const result = await db.insert(top5).values(rows).onConflictDoNothing().returning();
 
   return { inserted: result.length };
 

@@ -244,4 +244,78 @@ p {
   font-weight: 600;
 }
 
+@media (max-width: 1024px) {
+  .festival-page {
+    padding: 40px 20px;
+  }
+
+  .festival-page h1 {
+    font-size: 1.6rem;
+  }
+
+  .filter-row {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .filter-date,
+  .filter-btn,
+  .filter-select {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+  }
+
+  .festivals .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 650px) {
+  .festival-page {
+    padding: 30px 16px;
+  }
+
+  .festival-page h1 {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+  }
+
+  .searchbar-wrapper {
+    margin-bottom: 20px;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-date,
+  .filter-btn,
+  .filter-select {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .festivals .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  .festival-page h1 {
+    font-size: 1.25rem;
+  }
+
+  .festivals .grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+}
+
 </style>

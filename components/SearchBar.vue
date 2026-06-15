@@ -72,7 +72,6 @@ function onSearch() {
   color: #777;
 }
 
-/* Bouton */
 .search-btn {
   background: var(--color-secondary); /* Rose clair */
   border: none;
@@ -92,6 +91,66 @@ function onSearch() {
 .search-btn img {
   width: 18px;
   height: 18px;
+}
+
+@media (max-width: 900px) {
+  .searchbar {
+    max-width: 420px;
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .search-input {
+    font-size: 0.95rem;
+    padding: 6px;
+  }
+
+  .search-btn {
+    padding: 8px 12px;
+  }
+
+  .search-btn img {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .searchbar {
+    max-width: 100%;
+    padding: 6px 10px;
+    border-radius: 14px;
+  }
+
+  .search-input {
+    font-size: 0.9rem;
+    padding: 6px;
+  }
+
+  .search-btn {
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+
+  .search-btn img {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .searchbar {
+    padding: 5px 8px;
+    gap: 6px;
+  }
+
+  .search-input {
+    font-size: 0.85rem;
+  }
+
+  .search-btn {
+    padding: 7px 8px;
+  }
 }
 
 </style>

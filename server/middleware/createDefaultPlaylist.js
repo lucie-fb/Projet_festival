@@ -2,8 +2,11 @@ import { db } from "~/server/db"
 import { playlists } from "~/server/db/schema"
 import { eq, and } from "drizzle-orm"
 import { getUserId } from "~/server/utils/auth"
+import { getCookie } from "h3"
 
 export default defineEventHandler(async (event) => {
+  if (!getCookie(event, "id_token")) return
+
   const userId = getUserId(event)
 
     if(!userId) return

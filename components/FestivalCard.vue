@@ -91,7 +91,6 @@ const { t } = useI18n()
   transform: rotateY(180deg);
 }
 
-/* Faces */
 .front,
 .back {
   position: absolute;
@@ -161,6 +160,92 @@ const { t } = useI18n()
 
 .btn:hover {
   background: #ffd6f4;
+}
+
+@media (max-width: 900px) {
+  .card {
+    height: 400px;
+  }
+
+  .banner {
+    height: 120px;
+  }
+
+  .content h2 {
+    font-size: 1.1rem;
+  }
+
+  .meta {
+    font-size: 0.9rem;
+  }
+
+  .artists {
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    height: 360px;
+    border-radius: 16px;
+  }
+
+  .front,
+  .back {
+    padding: 14px;
+  }
+
+  .banner {
+    height: 110px;
+    border-radius: 12px;
+  }
+
+  .content h2 {
+    font-size: 1rem;
+  }
+
+  .meta {
+    font-size: 0.85rem;
+  }
+
+  .artists {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .card {
+    height: 330px;
+  }
+
+  .banner {
+    height: 100px;
+  }
+
+  .content h2 {
+    font-size: 0.9rem;
+  }
+
+  .meta,
+  .artists {
+    font-size: 0.8rem;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+  }
 }
 
 </style>

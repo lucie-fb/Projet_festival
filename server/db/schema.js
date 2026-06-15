@@ -22,10 +22,11 @@ export const albums = pgTable("albums", {
 
 export const top5 = pgTable("top5", {
   id :serial("id").primaryKey(),
+  name: text("name"),
   image: text("image"),
-  date: text("name"),
-  city: text("genre"),
-  country: text("followers"),
+  date: text("date"),
+  city: text("city"),
+  country: text("country"),
   popularity: text("popularity"),
   source: text("source"),
   lineup: jsonb("lineup"),
@@ -34,6 +35,7 @@ export const top5 = pgTable("top5", {
 
 export const top20 = pgTable("top20", {
   id :serial("id").primaryKey(),
+  name: text("name"),
   image: text("image"),
   date: text("date"),
   city: text("city"),

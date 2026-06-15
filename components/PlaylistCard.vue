@@ -57,7 +57,6 @@ const emit = defineEmits(["open"])
   box-shadow: 0 10px 26px rgba(153, 0, 112, 0.25);
 }
 
-/* THUMBNAIL */
 .playlist-thumb {
   width: 100%;
   height: 150px;
@@ -70,7 +69,6 @@ const emit = defineEmits(["open"])
   overflow: hidden;
 }
 
-/* SVG ICONS */
 .icon {
   width: 70px;
   height: 70px;
@@ -83,7 +81,6 @@ const emit = defineEmits(["open"])
   transform: scale(1.08);
 }
 
-/* TITRE */
 h3 {
   font-size: 1rem;
   font-weight: 600;
@@ -93,16 +90,30 @@ h3 {
   white-space: nowrap;
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
+  .playlist-card {
+    padding: 16px;
+    gap: 10px;
+  }
+
   .playlist-thumb {
     height: 130px;
+  }
+
+  .icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  h3 {
+    font-size: 0.95rem;
   }
 }
 
 @media (max-width: 600px) {
   .playlist-card {
     padding: 14px;
+    border-radius: 16px;
   }
 
   .playlist-thumb {
@@ -110,12 +121,31 @@ h3 {
   }
 
   .icon {
-    width: 55px;
-    height: 55px;
+    width: 50px;
+    height: 50px;
   }
 
   h3 {
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .playlist-card {
+    padding: 12px;
+  }
+
+  .playlist-thumb {
+    height: 110px;
+  }
+
+  .icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  h3 {
+    font-size: 0.85rem;
   }
 }
 

@@ -32,7 +32,7 @@ onMounted(() => {
           {{ t('account.delete') }}
         </a>
       </div>
-      <div v-else="isLoading" class="loading-box">
+      <div v-else class="loading-box">
   <div class="pulse-loader"></div>
   <p>{{ t('account.loading') }}</p>
 </div>
@@ -55,7 +55,6 @@ onMounted(() => {
   font-family: "Poppins", sans-serif;
 }
 
-/* Carte blanche */
 .account-box {
   background: #ffffff;
   padding: 40px 50px;
@@ -69,7 +68,6 @@ onMounted(() => {
   text-align: left;
 }
 
-/* Titre */
 .account-title {
   font-size: 1.8rem;
   font-weight: 700;
@@ -78,7 +76,6 @@ onMounted(() => {
   text-align: center;
 }
 
-/* Bloc infos */
 .account-info {
   display: flex;
   flex-direction: column;
@@ -94,7 +91,6 @@ onMounted(() => {
   border-left: 4px solid var(--color-primary);
 }
 
-/* Boutons */
 .btn-primary {
   background: var(--color-primary);
   color: var(--color-white);
@@ -160,5 +156,67 @@ onMounted(() => {
   font-weight: 600;
 }
 
+@media (max-width: 900px) {
+  .account-page {
+    padding: 30px 16px;
+  }
+
+  .account-box {
+    padding: 32px 36px;
+    max-width: 420px;
+  }
+
+  .account-title {
+    font-size: 1.6rem;
+  }
+
+  .account-info p {
+    font-size: 1rem;
+    padding: 10px 14px;
+  }
+
+  .btn-danger {
+    font-size: 0.95rem;
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .account-page {
+    padding: 20px 12px;
+  }
+
+  .account-box {
+    padding: 26px 22px;
+    max-width: 100%;
+    border-radius: 18px;
+  }
+
+  .account-title {
+    font-size: 1.4rem;
+  }
+
+  .account-info p {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+  }
+
+  .btn-danger {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 12px;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .account-title {
+    font-size: 1.25rem;
+  }
+
+  .account-info p {
+    font-size: 0.9rem;
+  }
+}
 </style>
 

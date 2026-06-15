@@ -219,7 +219,6 @@ onMounted(async()=>{
   transform: scale(1.15);
 }
 
-/* MENU POPUP */
 .menu-popup {
   position: absolute;
   top: 48px;
@@ -262,7 +261,31 @@ onMounted(async()=>{
   font-weight: 600;
 }
 
-/* 📱 RESPONSIVE */
+@media (max-width: 900px) {
+  .artist-card {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .artist-card img {
+    height: 180px;
+  }
+
+  .artist-card h2 {
+    font-size: 0.95rem;
+    padding: 6px 12px;
+  }
+
+  .fav-btn,
+  .menu-btn {
+    padding: 5px 7px;
+  }
+
+  .menu-popup {
+    min-width: 160px;
+  }
+}
+
 @media (max-width: 600px) {
   .artist-card {
     padding: 12px;
@@ -270,7 +293,7 @@ onMounted(async()=>{
   }
 
   .artist-card img {
-    height: 160px;
+    height: 150px;
   }
 
   .artist-card h2 {
@@ -278,10 +301,35 @@ onMounted(async()=>{
     padding: 6px 10px;
   }
 
+  .fav-btn,
+  .menu-btn {
+    padding: 5px 6px;
+    font-size: 16px;
+  }
+
   .menu-popup {
-    min-width: 150px;
+    min-width: 140px;
+    padding: 8px;
+  }
+
+  .menu-popup button {
+    font-size: 0.85rem;
+    padding: 6px 8px;
   }
 }
 
+@media (max-width: 400px) {
+  .artist-card img {
+    height: 130px;
+  }
+
+  .artist-card h2 {
+    font-size: 0.85rem;
+  }
+
+  .menu-popup {
+    min-width: 130px;
+  }
+}
 
 </style>

@@ -172,4 +172,100 @@ header {
   border-radius: 8px;
   cursor: pointer;
 }
+
+@media (max-width: 900px) {
+  .modal-box {
+    max-width: 420px;
+    padding: 18px;
+  }
+
+  header h2 {
+    font-size: 1.3rem;
+  }
+
+  .rename-box input {
+    font-size: 0.95rem;
+    padding: 6px 10px;
+  }
+
+  .rename-box button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  .item-row img {
+    width: 45px;
+    height: 45px;
+  }
+
+  .item-row span {
+    font-size: 0.95rem;
+  }
+
+  .remove-btn {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .modal-box {
+    width: 92%;
+    max-width: none;
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  header h2 {
+    font-size: 1.2rem;
+  }
+
+  .rename-box {
+    flex-direction: column;
+  }
+
+  .rename-box input,
+  .rename-box button {
+    width: 100%;
+  }
+
+  .item-row {
+    padding: 6px;
+    gap: 10px;
+  }
+
+  .item-row img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .item-row span {
+    font-size: 0.9rem;
+  }
+
+  .remove-btn {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .modal-box {
+    padding: 14px;
+  }
+
+  header h2 {
+    font-size: 1.1rem;
+  }
+
+  .item-row img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .item-row span {
+    font-size: 0.85rem;
+  }
+}
+
 </style>

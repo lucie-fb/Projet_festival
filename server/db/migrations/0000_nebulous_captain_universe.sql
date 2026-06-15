@@ -37,6 +37,7 @@ CREATE TABLE "playlists" (
 --> statement-breakpoint
 CREATE TABLE "top20" (
 	"id" serial PRIMARY KEY NOT NULL,
+	"name" text,
 	"image" text,
 	"date" text,
 	"city" text,
@@ -49,10 +50,11 @@ CREATE TABLE "top20" (
 --> statement-breakpoint
 CREATE TABLE "top5" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"image" text,
 	"name" text,
-	"genre" text,
-	"followers" text,
+	"image" text,
+	"date" text,
+	"city" text,
+	"country" text,
 	"popularity" text,
 	"source" text,
 	"lineup" jsonb,

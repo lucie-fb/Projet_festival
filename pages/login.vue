@@ -165,4 +165,67 @@ onMounted(async() => {
     transform: translateY(0);
   }
 }
+
+@media (max-width: 768px) {
+  .login-box {
+    padding: 30px 32px;
+    max-width: 360px;
+  }
+
+  .login-title {
+    font-size: 1.6rem;
+  }
+
+  .login-logo {
+    width: 150px;
+  }
+
+  .login-text,
+  .loading-text {
+    font-size: 1rem;
+  }
+
+  .btn-login {
+    font-size: 0.95rem;
+    padding: 10px 16px;
+  }
+}
+
+/* 📱 Mobiles */
+@media (max-width: 480px) {
+  .login-page {
+    padding: 20px 14px;
+  }
+
+  .login-box {
+    padding: 24px 22px;
+    max-width: 100%;
+    border-radius: 18px;
+  }
+
+  .login-title {
+    font-size: 1.4rem;
+  }
+
+  .login-logo {
+    width: 120px;
+  }
+
+  .login-text,
+  .loading-text {
+    font-size: 0.95rem;
+  }
+
+  .btn-login {
+    font-size: 0.9rem;
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+
+  .loading-spinner {
+    width: 45px;
+    height: 45px;
+    border-width: 4px;
+  }
+}
 </style>

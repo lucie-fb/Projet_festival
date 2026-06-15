@@ -135,6 +135,7 @@ onMounted(async () => {
   </div>
 </template>
 
+
 <style lang="css" scoped>
 p {
   font-size: 1rem;
@@ -195,6 +196,74 @@ p {
   font-size: 1.1rem;
   color: var(--color-primary);
   font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .page-container {
+    padding: 40px 20px;
+  }
+
+  .page-container h1 {
+    font-size: 1.6rem;
+  }
+
+  .artists .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .festivals .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 650px) {
+  .page-container {
+    padding: 30px 16px;
+  }
+
+  .page-container h1 {
+    font-size: 1.4rem;
+    margin-top: 18px;
+    margin-bottom: 14px;
+  }
+
+  .searchbar-wrapper {
+    margin-bottom: 20px;
+  }
+
+  .artists .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .festivals .grid {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 16px;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .page-container h1 {
+    font-size: 1.25rem;
+  }
+
+  .artists .grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  p {
+    font-size: 0.85rem;
+  }
 }
 
 </style>
