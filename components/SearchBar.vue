@@ -1,7 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
-import { useI18n } from "vue-i18n";
 
 const query = defineModel('query')
 const emit = defineEmits(['search'])

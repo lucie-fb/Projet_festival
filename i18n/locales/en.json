@@ -66,5 +66,12 @@
     "logout": "Log out",
     "login": "Log in",
     "loading": "Connecting…"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "placeholder": "Playlist name",
+    "create": "Create playlist",
+    "renamePrompt": "New name for \"{name}\":",
+    "deleteConfirm": "Delete playlist \"{name}\"?"
   }
 }

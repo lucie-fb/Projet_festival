@@ -66,5 +66,12 @@
     "logout": "Se déconnecter",
     "loading": "Connexion en cours…",
     "login": "Se connecter"
+  },
+  "favorites": {
+    "title": "Favoris",
+    "placeholder": "Nom de la playlist",
+    "create": "Créer une liste",
+    "renamePrompt": "Nouveau nom pour « {name} » :",
+    "deleteConfirm": "Supprimer la playlist « {name} » ?"
   }
 }

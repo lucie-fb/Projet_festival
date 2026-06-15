@@ -3,7 +3,6 @@ import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { useApi } from "~/composables/useApi";
 import FestivalCard from "../components/FestivalCard.vue";
-import { useI18n } from "vue-i18n";
 
 definePageMeta({
   middleware: "auth",

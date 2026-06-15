@@ -1,6 +1,5 @@
 <script setup>
 
-import { useI18n } from "vue-i18n";
 
 const { user, login, logout, loadUser } = useAuth();
 const { t } = useI18n();

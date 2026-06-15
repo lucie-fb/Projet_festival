@@ -4,14 +4,18 @@ import { eq, and } from "drizzle-orm"
 import { getUserId } from "~/server/utils/auth"
 
 export default defineEventHandler(async (event) => {
-  const userId = getUSerId(event)
+  const userId = getUserId(event)
 
   const defaultPlaylist = await db
   .select()
   .from(playlists)
   .where(and(eq(playlists.userId, userId), eq(playlists.isDefault, true)))
 
-  const playlistId = defaultPlaylist[0].isDefault
+  if (defaultPlaylist.length === 0) {
+  return { favorites: [] }
+}
+
+  const playlistId = defaultPlaylist[0].id
   const items = await db
   .select()
   .from(playlistItems)

@@ -1,12 +1,11 @@
 import { db } from "~/server/db"
-import { playlists } from "~/server/db/schema"
+import { playlists, playlistItems } from "~/server/db/schema"
 import { eq, and } from "drizzle-orm"
 import { getUserId } from "~/server/utils/auth"
 import { z } from "zod"
 
-const RenameSchema = z.object({
-  playlistId: z.number(),
-  name: z.string().min(1, "Le nom est obligatoire")
+const ItemsSchema = z.object({
+  playlistId: z.number()
 })
 
 export default defineEventHandler(async (event) => {
@@ -14,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   let body
   try {
-    body = RenameSchema.parse(await readBody(event))
+    body = ItemsSchema.parse(await readBody(event))
   } catch (error) {
     throw createError({
       statusCode: 400,
@@ -23,12 +22,15 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const { playlistId, name } = body
+  const { playlistId } = body
 
   const playlist = await db
     .select()
     .from(playlists)
-    .where(and(eq(playlists.id, playlistId), eq(playlists.userId, userId)))
+    .where(and(
+      eq(playlists.id, playlistId),
+      eq(playlists.userId, userId)
+    ))
 
   if (playlist.length === 0) {
     throw createError({
@@ -37,10 +39,12 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  await db
-    .update(playlists)
-    .set({ name })
-    .where(eq(playlists.id, playlistId))
+  const items = await db
+    .select()
+    .from(playlistItems)
+    .where(eq(playlistItems.playlistId, playlistId))
 
-  return { success: true }
+  return {
+    items
+  }
 })

@@ -1,4 +1,4 @@
-import { pgTable, serial, text, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, jsonb, timestamp, boolean, integer } from "drizzle-orm/pg-core";
 
 export const festivals = pgTable("festivals", {
   id: serial("id").primaryKey(),
@@ -44,29 +44,19 @@ export const top20 = pgTable("top20", {
   categories: jsonb("categories")
 });
 
-export const favorites = pgTable("favorites", {
-  id :serial("id").primaryKey(),
-  name: text("name").notNull(),
-  image: text("image"),
-  userId: text("userId").notNull(),
-  itemId: text("itemId").notNull(),
-  itemType: text("itemType").notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull()
-})
-
 export const playlists = pgTable("playlists", {
   id: serial("id").primaryKey(),
   userId: text("userId").notNull(),
-  nam: text("name").notNull(),
+  name: text("name").notNull(),
   isDefault: boolean("isDefault").default(false).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull()
 })
 
 export const playlistItems = pgTable("playlist_items", {
   id: serial("id").primaryKey(),
-  playlistId: text("playlistId").references(()=> playlists.id).notNull(),
+  playlistId: integer("playlistId").references(()=> playlists.id).notNull(),
   artistId: text("artistId").notNull(),
-  nam: text("name").notNull(),
+  name: text("name").notNull(),
   image: text("image"),
   createdAt: timestamp("createdAt").defaultNow().notNull()
 })

@@ -4,7 +4,6 @@ import ArtistCard from "~/components/ArtistCard.vue";
 import FestivalCard from "~/components/FestivalCard.vue";
 import { useRoute } from "vue-router";
 import { useApi } from "~/composables/useApi";
-import { useI18n } from "vue-i18n"
 
 
 definePageMeta({
