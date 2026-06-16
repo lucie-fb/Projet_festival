@@ -1,5 +1,6 @@
 // @ts-nocheck
 export default defineNuxtRouteMiddleware(async () => {
+
   const { user, loadUser } = useAuth()
   const localePath = useLocalePath()
 

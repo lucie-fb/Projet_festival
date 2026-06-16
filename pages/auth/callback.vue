@@ -40,7 +40,6 @@ onMounted(async () => {
   animation: fadeIn 0.4s ease;
 }
 
-/* Cercle animé */
 .loading-spinner {
   width: 60px;
   height: 60px;
@@ -51,7 +50,6 @@ onMounted(async () => {
   box-shadow: 0 0 12px rgba(255, 192, 238, 0.6);
 }
 
-/* Texte animé */
 .loading-text {
   font-size: 1.2rem;
   font-weight: 600;
@@ -60,14 +58,12 @@ onMounted(async () => {
   animation: pulse 1.4s ease-in-out infinite;
 }
 
-/* Rotation */
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-/* Apparition douce */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -79,7 +75,6 @@ onMounted(async () => {
   }
 }
 
-/* Effet pulsation du texte */
 @keyframes pulse {
   0% {
     opacity: 0.6;
