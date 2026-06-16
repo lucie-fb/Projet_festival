@@ -17,7 +17,6 @@ export default defineNuxtPlugin(() => {
 
   })
 
-
   manager.events.addUserLoaded(user => {
   document.cookie = `id_token=${user.id_token}; path=/; samesite=lax`;
 });
