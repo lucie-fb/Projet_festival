@@ -12,8 +12,8 @@ export default defineNuxtConfig({
         baseUrl: process.env.VITE_ZITADEL_ISSUER,
         clientId: process.env.VITE_ZITADEL_CLIENT_ID,
         clientSecret: '',
-        redirectUri: 'http://localhost:3000/auth/callback',
-        logoutRedirectUri: 'http://localhost:3000/'
+        redirectUri: process.env.VITE_ZITADEL_REDIRECT_URI,
+        logoutRedirectUri: process.env.VITE_ZITADEL_POST_LOGOUT_REDIRECT_URI
       }
     }
   },
