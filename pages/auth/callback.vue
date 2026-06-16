@@ -4,6 +4,8 @@ import { useAuth } from '~/composables/useAuth'
 
 const nuxtApp = useNuxtApp()
 const { loadUser } = useAuth()
+const localePath = useLocalePath()
+const { t } = useI18n()
 
 onMounted(async () => {
   await nextTick()
@@ -15,14 +17,14 @@ onMounted(async () => {
   await loadUser()
 
   // 3. Rediriger
-  navigateTo('/')
+  navigateTo(localePath('/'))
 })
 </script>
 
 <template>
   <div class="loading-connection">
   <div class="loading-spinner"></div>
-  <p class="loading-text">Connexion en cours…</p>
+  <p class="loading-text">{{ t('login.loading') }}</p>
 </div>
 
 </template>

@@ -1,79 +1,86 @@
 <script setup>
-
 const props = defineProps({
-    show: Boolean,
-    playlist: Object,
-    items: Array
-})
+  show: Boolean,
+  playlist: Object,
+  items: Array,
+});
 
-const emit = defineEmits(["close", "updated"])
+const emit = defineEmits(["close", "updated"]);
+const { t } = useI18n();
+const newName = ref("");
 
-const newName = ref("")
+watch(
+  () => props.playlist,
+  (p) => {
+    if (p) newName.value = p.name;
+  },
+);
 
-watch(()=> props.playlist, (p)=> {
-    if(p) newName.value = p.name
-})
-
-async function renamePlaylist(){
-    if(!newName.value.trim())return
-    await $fetch("/api/playlists/rename", {
-        method: "POST",
-        body: {
-            playlistId: props.playlist.id,
-            name: newName.value
-        },
-        credentials: "include"
-})
-emit("updated")
+async function renamePlaylist() {
+  if (!newName.value.trim()) return;
+  await $fetch("/api/playlists/rename", {
+    method: "POST",
+    body: {
+      playlistId: props.playlist.id,
+      name: newName.value,
+    },
+    credentials: "include",
+  });
+  emit("updated");
 }
 
 async function removeItem(itemId) {
   await $fetch("/api/playlists/remove-item", {
     method: "POST",
     body: { itemId },
-    credentials: "include"
-  })
+    credentials: "include",
+  });
 
-  emit("updated")
+  emit("updated");
 }
 
-function close(){
-    emit("close")
+function close() {
+  emit("close");
 }
 
+function goToArtist(name) {
+  router.push(`/artists/[id]?name=${encodeURIComponent(name)}`);
+}
 </script>
 
 <template>
-
-<div v-if="show" class="modal-overlay" @click.self="close">
+  <div v-if="show" class="modal-overlay" @click.self="close">
     <div class="modal-box">
+      <header>
+        <h2>{{ playlist.name }}</h2>
+        <button class="close-btn" @click="close">X</button>
+      </header>
 
-        <header>
-            <h2>{{ playlist.name }}</h2>
-            <button class="close-btn" @click="close">X</button>
-        </header>
+      <div v-if="!playlist.isDefault" class="rename-box">
+        <input v-model="newName" placeholder="t('playlist.renamePlaceholder')" />
+        <button @click="renamePlaylist">{{ t('playlist.rename') }}</button>
+      </div>
 
-        <div v-if="!playlist.isDefault" class="rename-box">
-            <input v-model="newName" placeholder="Nouveau nom"/>
-            <button @click="renamePlaylist">Renommer</button>
-        </div>
+      <div class="items-list">
+  <div 
+    v-for="item in items" 
+    :key="item.id" 
+    class="artist-wrapper"
+  >
+    <ArtistCard :artist="item" compact />
 
-        <div class="items-list">
-            <div v-for="item in items"
-            :key="item.id"
-            class="item-row">
-        <img :src="item.image" alt=""/>
-    <span>{{ item.name }}</span>
-
-<button class="remove-btn" @click="removeItem(item.id)"> Supprimer</button>
+    <button class="remove-btn" @click="removeItem(item.id)">
+       {{ t('playlist.remove') }}
+    </button>
+  </div>
 </div>
-        </div>
+
     </div>
-</div>
+  </div>
 </template>
 
 <style scoped>
-/* Overlay */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -87,41 +94,38 @@ function close(){
   z-index: 2000;
 }
 
-/* Box */
 .modal-box {
   background: white;
-  width: 90%;
-  max-width: 500px;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-  animation: fadeIn .2s ease;
+  width: 95%;
+  max-width: 900px;
+  max-height: 90vh;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+  animation: fadeIn .25s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-@keyframes fadeIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* Header */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 16px;
 }
 
 .close-btn {
   background: transparent;
   border: none;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   cursor: pointer;
 }
 
-/* Rename */
 .rename-box {
   display: flex;
   gap: 10px;
-  margin: 20px 0;
+  margin-bottom: 18px;
 }
 
 .rename-box input {
@@ -140,131 +144,68 @@ header {
   cursor: pointer;
 }
 
-/* Items */
 .items-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 22px;
+}
+
+.items-list::-webkit-scrollbar {
+  width: 8px;
+}
+.items-list::-webkit-scrollbar-thumb {
+  background: rgba(153, 0, 112, 0.35);
+  border-radius: 10px;
+}
+
+.artist-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-.item-row {
-  display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px;
-  border-radius: 12px;
-  background: #f7f7f7;
+  gap: 8px;
 }
 
-.item-row img {
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
-  object-fit: cover;
+.artist-wrapper .artist-card {
+  transform: scale(0.85);
+  transform-origin: top center;
+}
+
+.artist-wrapper .artist-card img.compact {
+  height: 110px !important;
+  border-radius: 12px;
+}
+
+.artist-wrapper .artist-card h2.compact {
+  font-size: 0.85rem !important;
+  padding: 6px 10px !important;
 }
 
 .remove-btn {
-  margin-left: auto;
-  background: #ff2d55;
+  background: rgba(153, 0, 112, 0.35);
   color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
   cursor: pointer;
-}
-
-@media (max-width: 900px) {
-  .modal-box {
-    max-width: 420px;
-    padding: 18px;
-  }
-
-  header h2 {
-    font-size: 1.3rem;
-  }
-
-  .rename-box input {
-    font-size: 0.95rem;
-    padding: 6px 10px;
-  }
-
-  .rename-box button {
-    padding: 6px 12px;
-    font-size: 0.9rem;
-  }
-
-  .item-row img {
-    width: 45px;
-    height: 45px;
-  }
-
-  .item-row span {
-    font-size: 0.95rem;
-  }
-
-  .remove-btn {
-    padding: 6px 10px;
-    font-size: 0.85rem;
-  }
+  font-size: 0.85rem;
+  width: 80%;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(153, 0, 112, 0.15);
+  
 }
 
 @media (max-width: 600px) {
-  .modal-box {
-    width: 92%;
-    max-width: none;
-    padding: 16px;
-    border-radius: 14px;
+  .items-list {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  header h2 {
-    font-size: 1.2rem;
-  }
-
-  .rename-box {
-    flex-direction: column;
-  }
-
-  .rename-box input,
-  .rename-box button {
-    width: 100%;
-  }
-
-  .item-row {
-    padding: 6px;
-    gap: 10px;
-  }
-
-  .item-row img {
-    width: 40px;
-    height: 40px;
-  }
-
-  .item-row span {
-    font-size: 0.9rem;
-  }
-
-  .remove-btn {
-    padding: 6px 8px;
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 400px) {
-  .modal-box {
-    padding: 14px;
-  }
-
-  header h2 {
-    font-size: 1.1rem;
-  }
-
-  .item-row img {
-    width: 36px;
-    height: 36px;
-  }
-
-  .item-row span {
-    font-size: 0.85rem;
+  .artist-wrapper .artist-card img.compact {
+    height: 95px !important;
   }
 }
 

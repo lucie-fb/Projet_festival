@@ -20,13 +20,21 @@ function toggleFlip() {
 const emit = defineEmits(['select'])
 const router = useRouter()
 const route = useRoute()
+const localePath = useLocalePath()
 
 const clickFestivals = () => {
   if (route.path === '/festivals') {
     emit('select', props.festival.name)
     return
   }
-  router.push(`/festivals?name=${encodeURIComponent(props.festival.name)}`)
+  router.push(localePath(`/festivals?name=${encodeURIComponent(props.festival.name)}`))
+}
+
+const expanded = ref(false)
+
+function toggleExpand(e) {
+  e.stopPropagation()
+  expanded.value = !expanded.value
 }
 
 const { t } = useI18n()
@@ -52,19 +60,40 @@ const { t } = useI18n()
       </div>
     </div>
 
-    <div class="back">
-      <p v-if="!festival.lineup || festival.lineup.length === 0">
-        {{ t('festival.noProgram') }}
-      </p>
+   <div class="back" :class="{ expanded }">
+  <p v-if="!festival.lineup || festival.lineup.length === 0">
+    {{ t('festival.noProgram') }}
+  </p>
 
-      <p v-else class="artists">
-        {{ festival.lineup.map(a => a.name).join(' — ') }}
-      </p>
+  <template v-else>
 
-      <button class="btn" @click.stop="toggleFlip">
-        {{ t('festival.back') }}
-      </button>
-    </div>
+    <p class="artists mobile" v-if="!expanded">
+      {{ festival.lineup.slice(0, 5).map(a => a.name).join(' — ') }}
+      <span v-if="festival.lineup.length > 5"> …</span>
+    </p>
+
+    <p class="artists mobile" v-if="expanded">
+      {{ festival.lineup.map(a => a.name).join(' — ') }}
+    </p>
+
+    <p class="artists desktop">
+      {{ festival.lineup.map(a => a.name).join(' — ') }}
+    </p>
+
+    <button 
+      class="btn mobile" 
+      @click="toggleExpand"
+      v-if="festival.lineup.length > 5"
+    >
+      {{ expanded ? t('festival.readLess') : t('festival.readMore') }}
+    </button>
+  </template>
+
+  <button class="btn" @click.stop="toggleFlip">
+    {{ t('festival.back') }}
+  </button>
+</div>
+
   </article>
 </template>
 
@@ -162,6 +191,19 @@ const { t } = useI18n()
   background: #ffd6f4;
 }
 
+.mobile {
+  display: none;
+}
+
+.desktop {
+  display: block;
+}
+
+.back.expanded {
+  height: auto !important;
+  min-height: 450px;
+}
+
 @media (max-width: 900px) {
   .card {
     height: 400px;
@@ -223,6 +265,22 @@ const { t } = useI18n()
     font-size: 0.85rem;
     border-radius: 10px;
   }
+   .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+  }
+
+  .back {
+    overflow-y: auto;
+  }
+
+  .back.expanded {
+    height: auto;
+    padding-bottom: 40px;
+  }
 }
 
 @media (max-width: 400px) {
@@ -245,6 +303,22 @@ const { t } = useI18n()
 
   .btn {
     font-size: 0.8rem;
+  }
+   .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+  }
+
+  .back {
+    overflow-y: auto;
+  }
+
+  .back.expanded {
+    height: auto;
+    padding-bottom: 40px;
   }
 }
 

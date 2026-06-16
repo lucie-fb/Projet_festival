@@ -8,12 +8,17 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  compact: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const router = useRouter();
 const route = useRoute ();
 const emit = defineEmits(['select'])
 const { t } = useI18n()
+const localePath = useLocalePath()
 const clickArtists = () => {
 
 if (route.path === "/artists") {
@@ -21,7 +26,7 @@ if (route.path === "/artists") {
     return;
 
 }
-  router.push(`/artists/[id]?name=${encodeURIComponent(props.artist.name)}`)
+  router.push(localePath(`/artists/[id]?name=${encodeURIComponent(props.artist.name)}`))
 }
 
 const isFavorite = ref(false);
@@ -74,7 +79,7 @@ async function addToPlaylist(playlistId){
 }
 
 function goToCreatePlaylist(){
-  router.push("/favorites")
+  router.push(localePath("/favorites"))
 }
 
 onMounted(async()=>{
@@ -92,8 +97,22 @@ onMounted(async()=>{
 </script>
 
 <template>
-  <article class="card artist-card" @click="clickArtists">
-    <button class="fav-btn" @click.stop="toggleFavorite">
+  <article
+  class="card artist-card"
+  tabindex="0"
+  role="button"
+  @click="clickArtists"
+  @keydown.enter="clickArtists"
+  @keydown.space.prevent="clickArtists"
+  :aria-label="t('artist.openArtist', { name: artist.name })"
+>
+    <button
+  v-if="!compact"
+  class="fav-btn"
+  @click.stop="toggleFavorite"
+  :aria-pressed="isFavorite"
+  :aria-label="isFavorite ? t('artist.removeFromLiked') : t('artist.addToLiked')"
+>
       <svg v-if="isFavorite" width="24" height="24" viewBox="0 0 24 24" fill="#FF2D55">
         <path d="M12 21s-6.2-4.35-9.33-8.48C-1.2 8.4 1.02 3 5.6 3c2.3 0 4.07 1.33 5.4 3.09C12.93 4.33 14.7 3 17 3c4.58 0 6.8 5.4 2.93 9.52C18.2 16.65 12 21 12 21z"/>
       </svg>
@@ -103,27 +122,48 @@ onMounted(async()=>{
       </svg>
     </button>
 
-    <button class="menu-btn" @click.stop="toggleMenu">⋮</button>
+    <button
+  v-if="!compact"
+  class="menu-btn"
+  @click.stop="toggleMenu"
+  aria-haspopup="true"
+  :aria-expanded="showMenu"
+  aria-controls="artist-menu"
+  :aria-label="t('artist.openMenu')"
+>
+  ⋮
+</button>
+
+    <div
+  v-if="showMenu && !compact"
+  class="menu-popup"
+  id="artist-menu"
+  role="menu"
+  @keydown.esc="showMenu = false"
+  @click.stop
+>
+  <button role="menuitem" @click="addToDefault">
+    {{ t('artist.addToLiked') }}
+  </button>
+
+  <button
+    v-for="p in playlists"
+    :key="p.id"
+    role="menuitem"
+    @click="addToPlaylist(p.id)"
+  >
+    {{ t('artist.addToPlaylist', { name: p.name }) }}
+  </button>
+
+  <button class="create-btn" role="menuitem" @click="goToCreatePlaylist">
+    {{ t('artist.createPlaylist') }}
+  </button>
+</div>
 
 
-    <div v-if="showMenu" class="menu-popup" @click.stop>
-      <button @click="addToDefault">Ajouter aux Artistes Likées ❤️</button>
 
-      <button 
-        v-for="p in playlists" 
-        :key="p.id" 
-        @click="addToPlaylist(p.id)"
-      >
-        Ajouter à {{ p.name }}
-      </button>
-
-      <button class="create-btn" @click="goToCreatePlaylist">
-        ➕ Créer une playlist
-      </button>
-    </div>
-
-    <img :src="artist.image" :alt="t('artist.alt', { name: artist.name })" />
-    <h2>{{ artist.name }}</h2>
+    <img :src="artist.image" :alt="t('artist.alt', { name: artist.name })" :class="{ compact: compact }" />
+    <h2 :class="{ compact: compact }">{{ artist.name }}</h2>
   </article>
 </template>
 
@@ -178,6 +218,16 @@ onMounted(async()=>{
 .artist-card:hover h2 {
   background: var(--color-primary);
   color: white;
+}
+
+.artist-card img.compact {
+  height: 110px !important;
+  border-radius: 12px;
+}
+
+.artist-card h2.compact {
+  font-size: 0.85rem !important;
+  padding: 6px 10px !important;
 }
 
 /* ❤️ FAVORI */
@@ -332,4 +382,11 @@ onMounted(async()=>{
   }
 }
 
+</style>
+
+<style lang="css">
+:focus {
+  outline: 3px solid #f4f0f1;
+  outline-offset: 4px;
+}
 </style>

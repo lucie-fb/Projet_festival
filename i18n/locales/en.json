@@ -5,7 +5,9 @@
     "festivals": "Festivals",
     "favorites": "Favorites",
     "account": "My Account",
-    "logout": "Logout"
+    "logout": "Logout",
+    "menu": "Menu"
+
   },
   "search": {
     "placeholder": "Search…",
@@ -32,7 +34,10 @@
     "results": "Festivals found",
     "viewProgram": "View lineup",
     "noProgram": "No lineup available",
-    "back": "Back"
+    "back": "Back",
+    "readMore": "Read more",
+    "readLess": "Read less"
+
   },
   "genres": {
     "rock": "Rock",
@@ -57,7 +62,10 @@
     "topFestivals": "Top 5 upcoming festivals"
   },
   "artist": {
-    "alt": "Photo of artist {name}"
+    "alt": "Photo of artist {name}",
+     "addToLiked": "Add to Liked Artists ❤️",
+    "addToPlaylist": "Add to { name }",
+    "createPlaylist": "➕ Create a playlist"
   },
   "login": {
     "welcome": "Welcome to",
@@ -73,5 +81,13 @@
     "create": "Create playlist",
     "renamePrompt": "New name for \"{name}\":",
     "deleteConfirm": "Delete playlist \"{name}\"?"
-  }
+  },
+  "playlist": {
+    "renamePlaceholder": "New name",
+    "rename": "Rename",
+    "remove": "Remove"
+  },
+  "openArtist": "OUvrir l'artiste {name}",
+  "removeFromLiked": "Retirer des artistes likés"
+
 }

@@ -1,15 +1,22 @@
 <script setup>
 const { locale, locales, setLocale } = useI18n()
 const localePath = useLocalePath()
+
+const isOpen = ref(false)
+
+function toggleMenu() {
+  isOpen.value = !isOpen.value
+}
+
 </script>
 
 <template>
-  <header class="navbar">
+  <header class="navbar" :class="{ open: isOpen }">
     <div class="navbar-left">
     <img alt="Logo du site Sun and Sound" src="/public/images/logo_sun&sound.png" class="login-logo">
     </div>
 
-    <nav class="navbar-center">
+    <nav class="navbar-center" :class="{ show: isOpen }">
     <NuxtLink :to="localePath('/')">{{ $t('nav.home') }}</NuxtLink>
       <NuxtLink :to="localePath('/artists/[id]')">{{ $t('nav.artists') }}</NuxtLink>
       <NuxtLink :to="localePath('/favorites')">{{ $t('nav.favorites') }}</NuxtLink>
@@ -19,7 +26,7 @@ const localePath = useLocalePath()
     </nav>
 
     <div class="navbar-right">
-      <select v-model="locale" @change="setLocale($event.target.value)" class="lang-select">
+      <select :value="locale" @change="setLocale($event.target.value)" class="lang-select">
         <option 
           v-for="l in locales" 
           :key="l.code" 
@@ -29,7 +36,7 @@ const localePath = useLocalePath()
         </option>
       </select>
     </div>
-
+ <button class="burger" @click="toggleMenu">☰</button>
   </header>
 
   <main>
@@ -108,6 +115,16 @@ const localePath = useLocalePath()
   background: #ffd6f4;
 }
 
+.burger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+}
+
+
 @media (max-width: 900px) {
   .navbar {
     padding: 14px 24px;
@@ -128,19 +145,12 @@ const localePath = useLocalePath()
 }
 
 @media (max-width: 700px) {
-  .navbar {
-    padding: 12px 20px;
-  }
-
   .navbar-center {
     display: none;
   }
 
-  .navbar::after {
-    content: "☰";
-    font-size: 1.8rem;
-    color: white;
-    cursor: pointer;
+  .burger {
+    display: block;
     margin-left: auto;
   }
 
@@ -157,21 +167,17 @@ const localePath = useLocalePath()
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
     z-index: 999;
   }
-
-  .navbar-center a {
-    font-size: 1.1rem;
-    padding: 10px 20px;
-  }
-
-  .lang-select {
-    padding: 6px 10px;
-    font-size: 0.9rem;
-  }
 }
+
 
 @media (max-width: 420px) {
   .login-logo {
     width: 42px;
+  }
+
+.burger {
+    display: block;
+    margin-left: auto;
   }
 
   .navbar::after {
