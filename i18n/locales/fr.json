@@ -8,9 +8,9 @@
     "logout": "Déconnexion",
     "menu": "Menu",
     "openMenu": "Ouvrir le menu",
-"closeMenu": "Fermer le menu"
-
+    "closeMenu": "Fermer le menu"
   },
+
   "search": {
     "placeholder": "Recherche…",
     "artists": "Recherchez vos artistes favoris et voyez où ils performent !",
@@ -18,30 +18,37 @@
     "alt": "Bouton de recherche",
     "button": "Lancer la recherche"
   },
+
   "titles": {
     "topArtists": "Top 20 des artistes les plus écoutés",
     "artistFound": "Artiste trouvé",
     "festivalsFound": "Festivals où il performe"
   },
+
   "loading": {
     "artists": "Chargement des artistes…"
   },
-  "festival": {
-    "loading": "Chargement des festivals…",
-    "searchPrompt": "Recherchez le festival de votre choix",
-    "enterName": "Merci de saisir un nom de festival.",
-    "searchError": "Une erreur est survenue lors de la recherche.",
-    "filterByDate": "Filtrer par date",
-    "allGenres": "Tous les genres",
-    "top20": "Top 20 des festivals à venir",
-    "results": "Festivals trouvés",
-    "viewProgram": "Voir la programmation",
-    "noProgram": "Aucune programmation disponible",
-    "back": "Retour",
-    "readMore": "Lire plus",
-    "readLess": "Lire moins"
 
-  },
+  "festival": {
+  "loading": "Chargement des festivals…",
+  "searchPrompt": "Recherchez le festival de votre choix",
+  "enterName": "Merci de saisir un nom de festival.",
+  "searchError": "Une erreur est survenue lors de la recherche.",
+  "filterByDate": "Filtrer par date",
+  "allGenres": "Tous les genres",
+  "top20": "Top 20 des festivals à venir",
+  "results": "Festivals trouvés",
+  "viewProgram": "Voir la programmation",
+  "noProgram": "Aucune programmation disponible",
+  "back": "Retour",
+  "readMore": "Lire plus",
+  "readLess": "Lire moins",
+  "openFestival": "Ouvrir le festival {name}",
+  "viewProgramFor": "Voir la programmation du festival {name}",
+  "backToFront": "Revenir à la face avant",
+  "programOf": "Programmation du festival {name}"
+},
+
   "genres": {
     "rock": "Rock",
     "pop": "Pop",
@@ -49,6 +56,7 @@
     "hiphop": "Hip-Hop",
     "jazz": "Jazz"
   },
+
   "account": {
     "title": "Mon Compte",
     "firstname": "Prénom",
@@ -57,6 +65,7 @@
     "delete": "Supprimer mon compte",
     "loading": "Chargement du compte…"
   },
+
   "home": {
     "loading": "Chargement de la page d'accueil…",
     "subtitle": "Recherchez vos artistes favoris et voyez où ils performent !",
@@ -64,12 +73,16 @@
     "topArtists": "Top 5 des artistes les plus écoutés",
     "topFestivals": "Top 5 des festivals à venir"
   },
-  "artist": {
-    "alt": "Photo de l’artiste {name}",
-    "addToLiked": "Ajouter aux Artistes Likées ❤️",
-    "addToPlaylist": "Ajouter à { name }",
-    "createPlaylist": "➕ Créer une playlist"
-  },
+"artist": {
+  "alt": "Photo de l’artiste {name}",
+  "addToLiked": "Ajouter aux Artistes Likées ❤️",
+  "addToPlaylist": "Ajouter à {name}",
+  "createPlaylist": "➕ Créer une playlist",
+  "openArtist": "Ouvrir l’artiste {name}",
+  "removeFromLiked": "Retirer des artistes likés",
+  "openMenu": "Ouvrir le menu"
+},
+
   "login": {
     "welcome": "Bienvenue sur",
     "logoAlt": "Logo du site Sun and Sound",
@@ -78,6 +91,7 @@
     "loading": "Connexion en cours…",
     "login": "Se connecter"
   },
+
   "favorites": {
     "title": "Favoris",
     "placeholder": "Nom de la playlist",
@@ -85,20 +99,15 @@
     "renamePrompt": "Nouveau nom pour « {name} » :",
     "deleteConfirm": "Supprimer la playlist « {name} » ?"
   },
-  "playlist": {
-    "renamePlaceholder": "Nouveau nom",
-    "rename": "Renommer",
-    "remove": "Supprimer",
-    "openPlaylist": "Ouvrir la playlist {name}",
-  "openDefault": "Ouvrir la playlist des artistes likés",
-  "removeArtist": "Supprimer {name} de la playlist"
-  },
-  "openArtist": "Ouvrir l’artiste {name}",
-  "removeFromLiked": "Retirer des artistes likés",
-  "openMenu": "Ouvrir le menu",
-  "openFestival": "Ouvrir le festival {name}",
-  "viewProgramFor": "Voir la programmation du festival {name}",
-  "backToFront": "Revenir à la face avant",
-  "programOf": "Programmation du festival {name}"
 
+  "playlist": {
+  "renamePlaceholder": "Nouveau nom",
+  "rename": "Renommer",
+  "remove": "Supprimer",
+  "openPlaylist": "Ouvrir la playlist {name}",
+  "openDefault": "Ouvrir la playlist des artistes likés",
+  "removeArtist": "Supprimer {name} de la playlist",
+  "renameLabel": "Renommer la playlist"
+
+}
 }

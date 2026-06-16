@@ -1,28 +1,19 @@
 <script setup>
 const props = defineProps({
-    playlist:{
-        type: Object,
-        required: true
-    },
-    isDefault:{
-        type: Boolean,
-        default: false
-    }
-});
-
-const emit = defineEmits(["open"])
-
-const modalBox = ref(null)
-
-watch(() => props.show, async (value) => {
-  if (value) {
-    await nextTick()
-    modalBox.value?.focus()
+  playlist: {
+    type: Object,
+    required: true
+  },
+  isDefault: {
+    type: Boolean,
+    default: false
   }
 })
 
-
+const emit = defineEmits(["open"])
+const { t } = useI18n()
 </script>
+
 
 <template>
   <div

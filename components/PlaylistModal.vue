@@ -75,7 +75,8 @@ function goToArtist(name) {
         <input
           v-model="newName"
           :placeholder="t('playlist.renamePlaceholder')"
-          aria-label="Renommer la playlist"
+          :aria-label="t('playlist.renameLabel')"
+
         />
         <button @click="renamePlaylist">
           {{ t('playlist.rename') }}

@@ -110,12 +110,13 @@ definePageMeta({ middleware: "auth" })
   </section>
 
   <PlaylistModal
-    :show="showModal"
-    :playlist="selectedPlaylist"
-    :items="playlistItems"
-    @close="showModal = false"
-    @updated="loadPlaylists"
-  />
+  v-if="selectedPlaylist"
+  :show="showModal"
+  :playlist="selectedPlaylist"
+  :items="playlistItems"
+  @close="showModal = false"
+  @updated="loadPlaylists"
+/>
 </template>
 
 

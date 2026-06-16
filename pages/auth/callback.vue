@@ -10,13 +10,10 @@ const { t } = useI18n()
 onMounted(async () => {
   await nextTick()
 
-  // 1. Finir le login OIDC
   await nuxtApp.$oidc.signinRedirectCallback()
 
-  // 2. Charger l'utilisateur
   await loadUser()
 
-  // 3. Rediriger
   navigateTo(localePath('/'))
 })
 </script>

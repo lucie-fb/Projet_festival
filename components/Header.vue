@@ -1,9 +1,8 @@
 <script setup>
-const { locale, locales, setLocale } = useI18n()
+const { t, locale, locales, setLocale } = useI18n()
 const localePath = useLocalePath()
 
 const isOpen = ref(false)
-const { t } = useI18n()
 
 function toggleMenu() {
   isOpen.value = !isOpen.value

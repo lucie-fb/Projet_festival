@@ -6,24 +6,29 @@
     "favorites": "Favorites",
     "account": "My Account",
     "logout": "Logout",
-    "menu": "Menu"
-
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
+
   "search": {
     "placeholder": "Search…",
     "artists": "Search your favorite artists and see where they perform!",
     "error": "An error occurred while searching.",
     "alt": "Search button",
-     "button": "Start search"
+    "button": "Start search"
   },
+
   "titles": {
     "topArtists": "Top 20 most listened artists",
     "artistFound": "Artist found",
     "festivalsFound": "Festivals where they perform"
   },
+
   "loading": {
     "artists": "Loading artists…"
   },
+
   "festival": {
     "loading": "Loading festivals…",
     "searchPrompt": "Search for the festival you want",
@@ -37,9 +42,13 @@
     "noProgram": "No lineup available",
     "back": "Back",
     "readMore": "Read more",
-    "readLess": "Read less"
-
+    "readLess": "Read less",
+    "openFestival": "Open festival {name}",
+    "viewProgramFor": "View the lineup for festival {name}",
+    "backToFront": "Return to front side",
+    "programOf": "Lineup of festival {name}"
   },
+
   "genres": {
     "rock": "Rock",
     "pop": "Pop",
@@ -47,6 +56,7 @@
     "hiphop": "Hip-Hop",
     "jazz": "Jazz"
   },
+
   "account": {
     "title": "My Account",
     "firstname": "First name",
@@ -55,6 +65,7 @@
     "delete": "Delete my account",
     "loading": "Loading account…"
   },
+
   "home": {
     "loading": "Loading homepage…",
     "subtitle": "Search for your favorite artists and see where they perform!",
@@ -62,12 +73,17 @@
     "topArtists": "Top 5 most listened artists",
     "topFestivals": "Top 5 upcoming festivals"
   },
+
   "artist": {
     "alt": "Photo of artist {name}",
-     "addToLiked": "Add to Liked Artists ❤️",
-    "addToPlaylist": "Add to { name }",
-    "createPlaylist": "➕ Create a playlist"
+    "addToLiked": "Add to Liked Artists ❤️",
+    "addToPlaylist": "Add to {name}",
+    "createPlaylist": "➕ Create a playlist",
+    "openArtist": "Open artist {name}",
+    "removeFromLiked": "Remove from liked artists",
+    "openMenu": "Open menu"
   },
+
   "login": {
     "welcome": "Welcome to",
     "logoAlt": "Sun and Sound website logo",
@@ -76,6 +92,7 @@
     "login": "Log in",
     "loading": "Connecting…"
   },
+
   "favorites": {
     "title": "Favorites",
     "placeholder": "Playlist name",
@@ -83,15 +100,14 @@
     "renamePrompt": "New name for \"{name}\":",
     "deleteConfirm": "Delete playlist \"{name}\"?"
   },
+
   "playlist": {
     "renamePlaceholder": "New name",
     "rename": "Rename",
     "remove": "Remove",
     "openPlaylist": "Open playlist {name}",
-  "openDefault": "Open liked artists playlist",
-   "removeArtist": "Remove {name} from playlist"
-  },
-  "openArtist": "Ouvrir l'artiste {name}",
-  "removeFromLiked": "Retirer des artistes likés"
-
+    "openDefault": "Open liked artists playlist",
+    "removeArtist": "Remove {name} from playlist",
+    "renameLabel": "Rename playlist"
+  }
 }
