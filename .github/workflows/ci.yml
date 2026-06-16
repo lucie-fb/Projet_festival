@@ -1,0 +1,42 @@
+name: Pipeline d'Intégration Continue (CI)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v4
+
+    - name: Configuration de Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22 # Version LTS recommandée pour la CI
+        cache: 'npm'
+        cache-dependency-path: sun-and-sound/package-lock.json
+
+    - name: Installation des dépendances
+      run: |
+        cd sun-and-sound
+        npm ci
+
+    - name: Analyse statique (Linting)
+      run: |
+        cd sun-and-sound
+        npm run lint
+
+    - name: Exécution des tests
+      run: |
+        cd sun-and-sound
+        npm run test
+
+    - name: Validation de la compilation (Build)
+      run: |
+        cd sun-and-sound
+        npm run build

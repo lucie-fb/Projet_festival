@@ -12,8 +12,8 @@ export default defineNuxtConfig({
         baseUrl: process.env.VITE_ZITADEL_ISSUER,
         clientId: process.env.VITE_ZITADEL_CLIENT_ID,
         clientSecret: '',
-        redirectUri: process.env.ZITADEL_REDIRECT_URI,
-        logoutRedirectUri: process.env.ZITADEL_POST_LOGOUT_REDIRECT_URI
+        redirectUri: process.env.VITE_ZITADEL_REDIRECT_URI,
+        logoutRedirectUri: process.env.VITE_ZITADEL_POST_LOGOUT_REDIRECT_URI
       }
     }
   },
@@ -24,8 +24,8 @@ export default defineNuxtConfig({
     SPOTIFY_ID: process.env.SPOTIFY_ID,
     SPOTIFY_KEY: process.env.SPOTIFY_KEY,
     POSTGRES_URL: process.env.POSTGRES_URL,
-    ZITADEL_ISSUER: process.env.ZITADEL_ISSUER,
-    ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,
+    VITE_ZITADEL_ISSUER: process.env.VITE_ZITADEL_ISSUER,
+    VITE_ZITADEL_CLIENT_ID: process.env.VITE_ZITADEL_CLIENT_ID,
   },
 
   // i18n
