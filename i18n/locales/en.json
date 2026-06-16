@@ -13,7 +13,8 @@
     "placeholder": "Search…",
     "artists": "Search your favorite artists and see where they perform!",
     "error": "An error occurred while searching.",
-    "alt": "Search button"
+    "alt": "Search button",
+     "button": "Start search"
   },
   "titles": {
     "topArtists": "Top 20 most listened artists",
@@ -85,9 +86,12 @@
   "playlist": {
     "renamePlaceholder": "New name",
     "rename": "Rename",
-    "remove": "Remove"
+    "remove": "Remove",
+    "openPlaylist": "Open playlist {name}",
+  "openDefault": "Open liked artists playlist",
+   "removeArtist": "Remove {name} from playlist"
   },
-  "openArtist": "OUvrir l'artiste {name}",
+  "openArtist": "Ouvrir l'artiste {name}",
   "removeFromLiked": "Retirer des artistes likés"
 
 }

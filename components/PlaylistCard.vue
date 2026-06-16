@@ -12,29 +12,47 @@ const props = defineProps({
 
 const emit = defineEmits(["open"])
 
+const modalBox = ref(null)
+
+watch(() => props.show, async (value) => {
+  if (value) {
+    await nextTick()
+    modalBox.value?.focus()
+  }
+})
+
+
 </script>
 
 <template>
-
-    <div class="playlist-card" @click="emit('open', playlist)">
-        <div class="playlist-thumb">
-     <svg v-if="isDefault" class="icon default-icon" viewBox="0 0 24 24">
+  <div
+    class="playlist-card"
+    tabindex="0"
+    role="button"
+    @click="emit('open', playlist)"
+    @keydown.enter="emit('open', playlist)"
+    @keydown.space.prevent="emit('open', playlist)"
+    :aria-label="isDefault 
+      ? t('playlist.openDefault') 
+      : t('playlist.openPlaylist', { name: playlist.name })"
+  >
+    <div class="playlist-thumb">
+      <svg v-if="isDefault" class="icon default-icon" viewBox="0 0 24 24">
         <path d="M12 21s-6.2-4.35-9.33-8.48C-1.2 8.4 1.02 3 5.6 3c2.3 0 4.07 1.33 5.4 3.09C12.93 4.33 14.7 3 17 3c4.58 0 6.8 5.4 2.93 9.52C18.2 16.65 12 21 12 21z"/>
       </svg>
 
-     <svg v-else class="icon music-icon" viewBox="0 0 48 48">
-  <path 
-    fill="white"
-    d="M34 6v22.5a6 6 0 1 1-3.5-5.5V14l-14 3v17.5a6 6 0 1 1-3.5-5.5V10.5L34 6z"
-  />
-</svg>
-
+      <svg v-else class="icon music-icon" viewBox="0 0 48 48">
+        <path 
+          fill="white"
+          d="M34 6v22.5a6 6 0 1 1-3.5-5.5V14l-14 3v17.5a6 6 0 1 1-3.5-5.5V10.5L34 6z"
+        />
+      </svg>
     </div>
 
     <h3>{{ playlist.name }}</h3>
   </div>
-
 </template>
+
 
 <style scoped>
 

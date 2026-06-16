@@ -21,15 +21,26 @@ function onSearch() {
 
 <template>
   <div class="searchbar">
+    <label for="search-input" class="sr-only">
+      {{ t('search.label') }}
+    </label>
     <input
+      id="search-input"
       type="search"
       :placeholder="t('search.placeholder')"
       v-model="query"
       @keyup.enter="onSearch"
       class="search-input"
+      aria-label="Recherche"
     />
 
-    <button class="search-btn" @click="onSearch">
+    <button
+      class="search-btn"
+      @click="onSearch"
+      @keydown.enter="onSearch"
+      @keydown.space.prevent="onSearch"
+      :aria-label="t('search.button')"
+    >
       <img
         width="16"
         height="16"
@@ -153,4 +164,18 @@ function onSearch() {
   }
 }
 
+</style>
+
+<style lang="css">
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>

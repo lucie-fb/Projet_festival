@@ -3,9 +3,11 @@ const { locale, locales, setLocale } = useI18n()
 const localePath = useLocalePath()
 
 const isOpen = ref(false)
+const { t } = useI18n()
 
 function toggleMenu() {
   isOpen.value = !isOpen.value
+   document.body.classList.toggle("menu-open", isOpen.value)
 }
 
 </script>
@@ -16,7 +18,13 @@ function toggleMenu() {
     <img alt="Logo du site Sun and Sound" src="/public/images/logo_sun&sound.png" class="login-logo">
     </div>
 
-    <nav class="navbar-center" :class="{ show: isOpen }">
+    <nav
+  id="main-navigation"
+  class="navbar-center"
+  :class="{ show: isOpen }"
+  role="navigation"
+  @keydown.esc="isOpen = false"
+>
     <NuxtLink :to="localePath('/')">{{ $t('nav.home') }}</NuxtLink>
       <NuxtLink :to="localePath('/artists/[id]')">{{ $t('nav.artists') }}</NuxtLink>
       <NuxtLink :to="localePath('/favorites')">{{ $t('nav.favorites') }}</NuxtLink>
@@ -36,7 +44,19 @@ function toggleMenu() {
         </option>
       </select>
     </div>
- <button class="burger" @click="toggleMenu">☰</button>
+ <button
+  class="burger"
+  @click="toggleMenu"
+  @keydown.enter="toggleMenu"
+  @keydown.space.prevent="toggleMenu"
+  aria-haspopup="true"
+  :aria-expanded="isOpen"
+  aria-controls="main-navigation"
+  :aria-label="isOpen ? t('nav.closeMenu') : t('nav.openMenu')"
+>
+  ☰
+</button>
+
   </header>
 
   <main>
@@ -97,6 +117,10 @@ function toggleMenu() {
 .navbar-right {
   display: flex;
   align-items: center;
+}
+
+.navbar.open ~ main {
+  overflow: hidden;
 }
 
 .lang-select {
@@ -189,4 +213,11 @@ function toggleMenu() {
   }
 }
 
+</style>
+
+<style lang="css">
+:focus {
+  outline: 3px solid #151414;
+  outline-offset: 4px;
+}
 </style>

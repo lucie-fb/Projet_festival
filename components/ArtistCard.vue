@@ -1,7 +1,6 @@
 <script setup>
-
-import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
   artist: {
@@ -10,159 +9,180 @@ const props = defineProps({
   },
   compact: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const router = useRouter();
-const route = useRoute ();
-const emit = defineEmits(['select'])
-const { t } = useI18n()
-const localePath = useLocalePath()
+const route = useRoute();
+const emit = defineEmits(["select"]);
+const { t } = useI18n();
+const localePath = useLocalePath();
 const clickArtists = () => {
-
-if (route.path === "/artists") {
-    emit("select", props.artist.name)
+  if (route.path === "/artists") {
+    emit("select", props.artist.name);
     return;
-
-}
-  router.push(localePath(`/artists/[id]?name=${encodeURIComponent(props.artist.name)}`))
-}
+  }
+  router.push(
+    localePath(`/artists/[id]?name=${encodeURIComponent(props.artist.name)}`),
+  );
+};
 
 const isFavorite = ref(false);
 
 const toggleFavorite = async () => {
   isFavorite.value = !isFavorite.value;
 
-  if(isFavorite.value){
-  await $fetch("/api/favorites/like", {
-    method: "POST",
-    body: {
-      artistId: props.artist.id,
-      name: props.artist.name,
-      image: props.artist.image
-    },
-    credentials: "include"
-  })
+  if (isFavorite.value) {
+    await $fetch("/api/favorites/like", {
+      method: "POST",
+      body: {
+        artistId: props.artist.id,
+        name: props.artist.name,
+        image: props.artist.image,
+      },
+      credentials: "include",
+    });
+  } else {
+    await $fetch("/api/favorites/unlike", {
+      method: "POST",
+      body: {
+        artistId: props.artist.id,
+      },
+      credentials: "include",
+    });
+  }
+};
+
+const showMenu = ref(false);
+const playlists = ref([]);
+
+function toggleMenu() {
+  showMenu.value = !showMenu.value;
 }
 
-else {
-  await $fetch("/api/favorites/unlike", {
-    method: "POST",
-    body: {
-      artistId: props.artist.id
-    },
-    credentials: "include"
-  })
-}
-}
-
-const showMenu = ref(false)
-const playlists = ref([])
-
-function toggleMenu(){
-  showMenu.value = !showMenu.value
-}
-
-async function addToPlaylist(playlistId){
+async function addToPlaylist(playlistId) {
   await $fetch("/api/playlists/add-item", {
     method: "POST",
     body: {
       playlistId,
       artistId: props.artist.id,
       name: props.artist.name,
-      image: props.artist.image
+      image: props.artist.image,
     },
-    credentials:"include"
-  })
-  showMenu.value = false
-}
-
-function goToCreatePlaylist(){
-  router.push(localePath("/favorites"))
-}
-
-onMounted(async()=>{
-  const favRes = await $fetch("/api/favorites/list", {
-    credentials: "include"
+    credentials: "include",
   });
-  isFavorite.value = favRes.favorites.some(f =>f.artistId === props.artist.id);
+  showMenu.value = false;
+}
+
+function goToCreatePlaylist() {
+  router.push(localePath("/favorites"));
+}
+
+onMounted(async () => {
+  const favRes = await $fetch("/api/favorites/list", {
+    credentials: "include",
+  });
+  isFavorite.value = favRes.favorites.some(
+    (f) => f.artistId === props.artist.id,
+  );
 
   const playlistRes = await $fetch("/api/playlists/list", {
-    credentials: "include"
-  })
-  playlists.value = playlistRes.playlists
-})
-
+    credentials: "include",
+  });
+  playlists.value = playlistRes.playlists;
+});
 </script>
 
 <template>
   <article
-  class="card artist-card"
-  tabindex="0"
-  role="button"
-  @click="clickArtists"
-  @keydown.enter="clickArtists"
-  @keydown.space.prevent="clickArtists"
-  :aria-label="t('artist.openArtist', { name: artist.name })"
->
+    class="card artist-card"
+    tabindex="0"
+    role="button"
+    @click="clickArtists"
+    @keydown.enter="clickArtists"
+    @keydown.space.prevent="clickArtists"
+    :aria-label="t('artist.openArtist', { name: artist.name })"
+  >
     <button
-  v-if="!compact"
-  class="fav-btn"
-  @click.stop="toggleFavorite"
-  :aria-pressed="isFavorite"
-  :aria-label="isFavorite ? t('artist.removeFromLiked') : t('artist.addToLiked')"
->
-      <svg v-if="isFavorite" width="24" height="24" viewBox="0 0 24 24" fill="#FF2D55">
-        <path d="M12 21s-6.2-4.35-9.33-8.48C-1.2 8.4 1.02 3 5.6 3c2.3 0 4.07 1.33 5.4 3.09C12.93 4.33 14.7 3 17 3c4.58 0 6.8 5.4 2.93 9.52C18.2 16.65 12 21 12 21z"/>
+      v-if="!compact"
+      class="fav-btn"
+      @click.stop="toggleFavorite"
+      :aria-pressed="isFavorite"
+      :aria-label="
+        isFavorite ? t('artist.removeFromLiked') : t('artist.addToLiked')
+      "
+    >
+      <svg
+        v-if="isFavorite"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="#FF2D55"
+      >
+        <path
+          d="M12 21s-6.2-4.35-9.33-8.48C-1.2 8.4 1.02 3 5.6 3c2.3 0 4.07 1.33 5.4 3.09C12.93 4.33 14.7 3 17 3c4.58 0 6.8 5.4 2.93 9.52C18.2 16.65 12 21 12 21z"
+        />
       </svg>
 
-      <svg v-else width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF2D55" stroke-width="2">
-        <path d="M12.1 20.3l-.1.1-.1-.1C7.14 16.36 3.6 13.28 3.6 9.5 3.6 6.42 6.02 4 9.1 4c1.74 0 3.41.81 4.4 2.09C14.49 4.81 16.16 4 17.9 4c3.08 0 5.5 2.42 5.5 5.5 0 3.78-3.54 6.86-8.3 10.8z"/>
+      <svg
+        v-else
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#FF2D55"
+        stroke-width="2"
+      >
+        <path
+          d="M12.1 20.3l-.1.1-.1-.1C7.14 16.36 3.6 13.28 3.6 9.5 3.6 6.42 6.02 4 9.1 4c1.74 0 3.41.81 4.4 2.09C14.49 4.81 16.16 4 17.9 4c3.08 0 5.5 2.42 5.5 5.5 0 3.78-3.54 6.86-8.3 10.8z"
+        />
       </svg>
     </button>
 
     <button
-  v-if="!compact"
-  class="menu-btn"
-  @click.stop="toggleMenu"
-  aria-haspopup="true"
-  :aria-expanded="showMenu"
-  aria-controls="artist-menu"
-  :aria-label="t('artist.openMenu')"
->
-  ⋮
-</button>
+      v-if="!compact"
+      class="menu-btn"
+      @click.stop="toggleMenu"
+      aria-haspopup="true"
+      :aria-expanded="showMenu"
+      aria-controls="artist-menu"
+      :aria-label="t('artist.openMenu')"
+    >
+      ⋮
+    </button>
 
     <div
-  v-if="showMenu && !compact"
-  class="menu-popup"
-  id="artist-menu"
-  role="menu"
-  @keydown.esc="showMenu = false"
-  @click.stop
->
-  <button role="menuitem" @click="addToDefault">
-    {{ t('artist.addToLiked') }}
-  </button>
+      v-if="showMenu && !compact"
+      class="menu-popup"
+      id="artist-menu"
+      role="menu"
+      @keydown.esc="showMenu = false"
+      @click.stop
+    >
+      <button role="menuitem" @click="addToDefault">
+        {{ t("artist.addToLiked") }}
+      </button>
 
-  <button
-    v-for="p in playlists"
-    :key="p.id"
-    role="menuitem"
-    @click="addToPlaylist(p.id)"
-  >
-    {{ t('artist.addToPlaylist', { name: p.name }) }}
-  </button>
+      <button
+        v-for="p in playlists"
+        :key="p.id"
+        role="menuitem"
+        @click="addToPlaylist(p.id)"
+      >
+        {{ t("artist.addToPlaylist", { name: p.name }) }}
+      </button>
 
-  <button class="create-btn" role="menuitem" @click="goToCreatePlaylist">
-    {{ t('artist.createPlaylist') }}
-  </button>
-</div>
+      <button class="create-btn" role="menuitem" @click="goToCreatePlaylist">
+        {{ t("artist.createPlaylist") }}
+      </button>
+    </div>
 
-
-
-    <img :src="artist.image" :alt="t('artist.alt', { name: artist.name })" :class="{ compact: compact }" />
+    <img
+      :src="artist.image"
+      :alt="t('artist.alt', { name: artist.name })"
+      :class="{ compact: compact }"
+    />
     <h2 :class="{ compact: compact }">{{ artist.name }}</h2>
   </article>
 </template>
@@ -179,7 +199,9 @@ onMounted(async()=>{
   border: 1px solid rgba(153, 0, 112, 0.15);
   box-shadow: 0 4px 14px rgba(153, 0, 112, 0.15);
   position: relative;
-  transition: transform .25s ease, box-shadow .25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
   cursor: pointer;
 }
 
@@ -195,7 +217,7 @@ onMounted(async()=>{
   object-fit: cover;
   border-radius: 16px;
   margin-bottom: 12px;
-  transition: transform .25s ease;
+  transition: transform 0.25s ease;
 }
 
 .artist-card:hover img {
@@ -212,7 +234,7 @@ onMounted(async()=>{
   font-weight: 600;
   display: inline-block;
   margin-bottom: 10px;
-  transition: background .25s ease;
+  transition: background 0.25s ease;
 }
 
 .artist-card:hover h2 {
@@ -241,8 +263,8 @@ onMounted(async()=>{
   padding: 6px;
   cursor: pointer;
   z-index: 20;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  transition: transform .2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
 }
 
 .fav-btn:hover {
@@ -260,9 +282,9 @@ onMounted(async()=>{
   padding: 6px 8px;
   cursor: pointer;
   z-index: 20;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   font-size: 18px;
-  transition: transform .2s ease;
+  transition: transform 0.2s ease;
 }
 
 .menu-btn:hover {
@@ -276,18 +298,24 @@ onMounted(async()=>{
   background: white;
   border-radius: 14px;
   padding: 10px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   gap: 8px;
   z-index: 30;
   min-width: 180px;
-  animation: fadeIn .2s ease-out;
+  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .menu-popup button {
@@ -298,7 +326,9 @@ onMounted(async()=>{
   cursor: pointer;
   font-size: 0.9rem;
   border-radius: 8px;
-  transition: background .2s ease, padding-left .2s ease;
+  transition:
+    background 0.2s ease,
+    padding-left 0.2s ease;
 }
 
 .menu-popup button:hover {
@@ -381,12 +411,11 @@ onMounted(async()=>{
     min-width: 130px;
   }
 }
-
 </style>
 
 <style lang="css">
 :focus {
-  outline: 3px solid #f4f0f1;
+  outline: 3px solid #151414;
   outline-offset: 4px;
 }
 </style>

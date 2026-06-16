@@ -6,14 +6,17 @@
     "favorites": "Liste Favoris",
     "account": "Mon Compte",
     "logout": "Déconnexion",
-    "menu": "Menu"
+    "menu": "Menu",
+    "openMenu": "Ouvrir le menu",
+"closeMenu": "Fermer le menu"
 
   },
   "search": {
     "placeholder": "Recherche…",
     "artists": "Recherchez vos artistes favoris et voyez où ils performent !",
     "error": "Une erreur est survenue lors de la recherche.",
-    "alt": "Bouton de recherche"
+    "alt": "Bouton de recherche",
+    "button": "Lancer la recherche"
   },
   "titles": {
     "topArtists": "Top 20 des artistes les plus écoutés",
@@ -85,10 +88,17 @@
   "playlist": {
     "renamePlaceholder": "Nouveau nom",
     "rename": "Renommer",
-    "remove": "Supprimer"
+    "remove": "Supprimer",
+    "openPlaylist": "Ouvrir la playlist {name}",
+  "openDefault": "Ouvrir la playlist des artistes likés",
+  "removeArtist": "Supprimer {name} de la playlist"
   },
   "openArtist": "Ouvrir l’artiste {name}",
   "removeFromLiked": "Retirer des artistes likés",
-  "openMenu": "Ouvrir le menu"
+  "openMenu": "Ouvrir le menu",
+  "openFestival": "Ouvrir le festival {name}",
+  "viewProgramFor": "Voir la programmation du festival {name}",
+  "backToFront": "Revenir à la face avant",
+  "programOf": "Programmation du festival {name}"
 
 }

@@ -49,35 +49,60 @@ function goToArtist(name) {
 </script>
 
 <template>
-  <div v-if="show" class="modal-overlay" @click.self="close">
-    <div class="modal-box">
+  <div
+    v-if="show"
+    class="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    :aria-labelledby="'playlist-title'"
+    @keydown.esc="close"
+    @click.self="close"
+  >
+    <div class="modal-box" ref="modalBox" tabindex="-1">
       <header>
-        <h2>{{ playlist.name }}</h2>
-        <button class="close-btn" @click="close">X</button>
+        <h2 id="playlist-title">{{ playlist.name }}</h2>
+
+        <button
+          class="close-btn"
+          @click="close"
+          aria-label="Fermer la fenêtre"
+        >
+          X
+        </button>
       </header>
 
       <div v-if="!playlist.isDefault" class="rename-box">
-        <input v-model="newName" placeholder="t('playlist.renamePlaceholder')" />
-        <button @click="renamePlaylist">{{ t('playlist.rename') }}</button>
+        <input
+          v-model="newName"
+          :placeholder="t('playlist.renamePlaceholder')"
+          aria-label="Renommer la playlist"
+        />
+        <button @click="renamePlaylist">
+          {{ t('playlist.rename') }}
+        </button>
       </div>
 
       <div class="items-list">
-  <div 
-    v-for="item in items" 
-    :key="item.id" 
-    class="artist-wrapper"
-  >
-    <ArtistCard :artist="item" compact />
+        <div
+          v-for="item in items"
+          :key="item.id"
+          class="artist-wrapper"
+        >
+          <ArtistCard :artist="item" compact />
 
-    <button class="remove-btn" @click="removeItem(item.id)">
-       {{ t('playlist.remove') }}
-    </button>
-  </div>
-</div>
-
+          <button
+            class="remove-btn"
+            @click="removeItem(item.id)"
+            :aria-label="t('playlist.removeArtist', { name: item.name })"
+          >
+            {{ t('playlist.remove') }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
+
 
 <style scoped>
 

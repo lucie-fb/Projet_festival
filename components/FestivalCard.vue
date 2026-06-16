@@ -41,7 +41,18 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <article class="card" :class="{ flipped }" @click="clickFestivals">
+  <article
+  class="card"
+  :class="{ flipped }"
+  tabindex="0"
+  role="button"
+  @click="clickFestivals"
+  @keydown.enter="clickFestivals"
+  @keydown.space.prevent="clickFestivals"
+  :aria-label="t('festival.openFestival', { name: festival.name })"
+  :aria-expanded="flipped"
+>
+
     <div class="front">
       <img class="banner" :src="festival.image" :alt="festival.name" />
 
@@ -54,13 +65,24 @@ const { t } = useI18n()
           <span v-if="festival.country"> ({{ festival.country }})</span>
         </p>
 
-        <button class="btn" @click.stop="toggleFlip">
-          {{ t('festival.viewProgram') }}
-        </button>
+        <button
+  class="btn"
+  @click.stop="toggleFlip"
+  :aria-label="t('festival.viewProgramFor', { name: festival.name })"
+>
+  {{ t('festival.viewProgram') }}
+</button>
+
       </div>
     </div>
 
-   <div class="back" :class="{ expanded }">
+   <div
+  class="back"
+  :class="{ expanded }"
+  role="region"
+  :aria-label="t('festival.programOf', { name: festival.name })"
+>
+
   <p v-if="!festival.lineup || festival.lineup.length === 0">
     {{ t('festival.noProgram') }}
   </p>
@@ -80,18 +102,26 @@ const { t } = useI18n()
       {{ festival.lineup.map(a => a.name).join(' — ') }}
     </p>
 
-    <button 
-      class="btn mobile" 
-      @click="toggleExpand"
-      v-if="festival.lineup.length > 5"
-    >
-      {{ expanded ? t('festival.readLess') : t('festival.readMore') }}
-    </button>
+    <button
+  class="btn mobile"
+  @click="toggleExpand"
+  :aria-expanded="expanded"
+  :aria-label="expanded ? t('festival.readLess') : t('festival.readMore')"
+  v-if="festival.lineup.length > 5"
+>
+  {{ expanded ? t('festival.readLess') : t('festival.readMore') }}
+</button>
+
   </template>
 
-  <button class="btn" @click.stop="toggleFlip">
-    {{ t('festival.back') }}
-  </button>
+ <button
+  class="btn"
+  @click.stop="toggleFlip"
+  :aria-label="t('festival.backToFront')"
+>
+  {{ t('festival.back') }}
+</button>
+
 </div>
 
   </article>
@@ -322,4 +352,11 @@ const { t } = useI18n()
   }
 }
 
+</style>
+
+<style lang="css">
+:focus {
+  outline: 3px solid #151414;
+  outline-offset: 4px;
+}
 </style>
