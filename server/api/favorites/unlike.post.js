@@ -35,7 +35,7 @@ export default defineEventHandler (async (event) => {
 
         await db
         .delete(playlistItems)
-        .where(and(eq(playlistItems.playlistId, playlistId), eq(playlistItems.artistId)))
+        .where(and(eq(playlistItems.playlistId, playlistId), eq(playlistItems.artistId, artistId)))
 
         return {success:true};
     })

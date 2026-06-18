@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { useUserDataStore } from "@/stores/userData";
 
 const props = defineProps({
   artist: {
@@ -16,6 +17,7 @@ const props = defineProps({
 const router = useRouter();
 const route = useRoute();
 const emit = defineEmits(["select"]);
+const userData = useUserDataStore();
 const { t } = useI18n();
 const localePath = useLocalePath();
 const clickArtists = () => {
@@ -28,14 +30,27 @@ const clickArtists = () => {
   );
 };
 
-const isFavorite = ref(false);
+const isFavorite = computed(()=>
+  userData.isFavorite(props.artist.id)
+);
 
 const toggleFavorite = async () => {
-  isFavorite.value = !isFavorite.value;
 
   if (isFavorite.value) {
+    await $fetch("/api/favorites/unlike", {
+       method: "POST",
+      body: {
+        artistId: props.artist.id,
+      },
+      credentials: "include",
+    });
+     userData.favorites = userData.favorites.filter(
+      f => f.artistId !== props.artist.id
+    );
+    }
+   else {
     await $fetch("/api/favorites/like", {
-      method: "POST",
+     method: "POST",
       body: {
         artistId: props.artist.id,
         name: props.artist.name,
@@ -43,19 +58,15 @@ const toggleFavorite = async () => {
       },
       credentials: "include",
     });
-  } else {
-    await $fetch("/api/favorites/unlike", {
-      method: "POST",
-      body: {
-        artistId: props.artist.id,
-      },
-      credentials: "include",
-    });
+     userData.favorites.push({
+      artistId: props.artist.id,
+      name: props.artist.name,
+      image: props.artist.image
+})
+   };
   }
-};
-
+  
 const showMenu = ref(false);
-const playlists = ref([]);
 
 function toggleMenu() {
   showMenu.value = !showMenu.value;
@@ -79,19 +90,7 @@ function goToCreatePlaylist() {
   router.push(localePath("/favorites"));
 }
 
-onMounted(async () => {
-  const favRes = await $fetch("/api/favorites/list", {
-    credentials: "include",
-  });
-  isFavorite.value = favRes.favorites.some(
-    (f) => f.artistId === props.artist.id,
-  );
-
-  const playlistRes = await $fetch("/api/playlists/list", {
-    credentials: "include",
-  });
-  playlists.value = playlistRes.playlists;
-});
+const playlists = computed(()=>userData.playlists)
 </script>
 
 <template>
