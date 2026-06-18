@@ -1,8 +1,7 @@
 <script setup>
-
 definePageMeta({
-  middleware: 'auth'
-})
+  middleware: "auth",
+});
 
 const { user, loadUser } = useAuth();
 const isLoading = ref(true);
@@ -10,39 +9,42 @@ const { t } = useI18n();
 
 onMounted(() => {
   loadUser();
-  isLoading.value = false
+  isLoading.value = false;
 });
 </script>
 
 <template>
   <div class="account-page">
     <div class="account-box">
+      <h1 class="account-title">{{ t("account.title") }}</h1>
 
-      <h1 class="account-title">{{ t('account.title') }}</h1>
-
-      <div v-if="user" class="account-info">
-        <p><strong>{{ t('account.firstname') }} :</strong> {{ user.profile.given_name }}</p>
-        <p><strong>{{ t('account.lastname') }} :</strong> {{ user.profile.family_name }}</p>
-        <p><strong>{{ t('account.email') }} :</strong> {{ user.profile.email }}</p>
-
+      <div v-if="user" class="account-info" role="list">
+        <p role="listitem">
+          <strong>{{ t("account.firstname") }} :</strong>
+          {{ user.profile.given_name }}
+        </p>
+        <p role="listitem">
+          <strong>{{ t("account.lastname") }} :</strong>
+          {{ user.profile.family_name }}
+        </p>
+        <p role="listitem">
+          <strong>{{ t("account.email") }} :</strong> {{ user.profile.email }}
+        </p>
         <a
           class="btn-danger"
           href="https://sun-and-sound-q7pe8b.eu1.zitadel.cloud/ui/console/users/me"
+          :aria-label="t('account.delete') + ' – ' + user.profile.email"
         >
-          {{ t('account.delete') }}
+          {{ t("account.delete") }}
         </a>
       </div>
-      <div v-else class="loading-box">
-  <div class="pulse-loader"></div>
-  <p>{{ t('account.loading') }}</p>
-</div>
-
-
+      <div v-else class="loading-box" role="status" aria-live="polite">
+        <div class="pulse-loader"></div>
+        <p>{{ t("account.loading") }}</p>
+      </div>
     </div>
   </div>
 </template>
-
-
 
 <style lang="css" scoped>
 .account-page {
@@ -61,7 +63,7 @@ onMounted(() => {
   border-radius: 22px;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -144,9 +146,18 @@ onMounted(() => {
 }
 
 @keyframes pulse {
-  0% { transform: scale(0.8); opacity: 0.6; }
-  50% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0.8); opacity: 0.6; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
 }
 
 .loading-box p {
@@ -219,4 +230,3 @@ onMounted(() => {
   }
 }
 </style>
-

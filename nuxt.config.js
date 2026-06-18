@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   css: ['@/assets/styles/main.css'],
   
-  modules: ['@nuxtjs/i18n'],
+  modules: ['@nuxtjs/i18n', '@pinia/nuxt'],
 
   // Client
   auth: {
@@ -24,9 +24,22 @@ export default defineNuxtConfig({
     SPOTIFY_ID: process.env.SPOTIFY_ID,
     SPOTIFY_KEY: process.env.SPOTIFY_KEY,
     POSTGRES_URL: process.env.POSTGRES_URL,
+     public: {
     VITE_ZITADEL_ISSUER: process.env.VITE_ZITADEL_ISSUER,
     VITE_ZITADEL_CLIENT_ID: process.env.VITE_ZITADEL_CLIENT_ID,
-  },
+    VITE_ZITADEL_REDIRECT_URI: process.env.VITE_ZITADEL_REDIRECT_URI,
+    VITE_ZITADEL_POST_LOGOUT_REDIRECT_URI: process.env.VITE_ZITADEL_POST_LOGOUT_REDIRECT_URI
+  }
+},
+
+routeRules: {
+  '/auth/callback': {
+    headers: {
+      'Content-Security-Policy': "connect-src 'self' http://localhost:3000 https://sun-and-sound-q7pe8b.eu1.zitadel.cloud"
+    }
+  }
+},
+
 
   // i18n
   i18n: {

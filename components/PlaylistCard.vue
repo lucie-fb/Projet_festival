@@ -10,7 +10,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(["open"])
+const emit = defineEmits(["open", "rename", "delete"])
 const { t } = useI18n()
 </script>
 

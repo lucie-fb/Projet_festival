@@ -19,12 +19,16 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="loading-connection">
-  <div class="loading-spinner"></div>
-  <p class="loading-text">{{ t('login.loading') }}</p>
-</div>
-
+  <div 
+    class="loading-connection"
+    role="status"
+    aria-live="polite"
+  >
+    <div class="loading-spinner" aria-hidden="true"></div>
+    <p class="loading-text">{{ t('login.loading') }}</p>
+  </div>
 </template>
+
 
 <style lang="css" scoped>
 .loading-connection {

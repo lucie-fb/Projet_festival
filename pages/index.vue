@@ -33,7 +33,12 @@ onMounted(async () => {
 
 <template>
   <div class="page-container">
-    <div v-if="isLoading" class="loading-box">
+    <div 
+  v-if="isLoading" 
+  class="loading-box"
+  role="status"
+  aria-live="polite"
+>
   <div class="pulse-loader"></div>
   <p>{{ t('home.loading') }}</p>
 </div>
@@ -44,30 +49,40 @@ onMounted(async () => {
       </div>
 
       <p>{{ t('home.subtitle') }}</p>
-      <p v-if="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </p>
+      <p 
+  v-if="errorMessage" 
+  class="error-message"
+  role="alert"
+  aria-live="assertive"
+>
+  {{ errorMessage }}
+</p>
+
 
       <h2>{{ t('home.topArtists') }}</h2>
       <div class="artists">
-        <div class="grid">
-          <ArtistCard
-            v-for="artist in artists"
-            :key="artist.id"
-            :artist="artist"
-          />
+       <div class="grid" role="list">
+  <ArtistCard
+    v-for="artist in artists"
+    :key="artist.id"
+    :artist="artist"
+    role="listitem"
+  />
+
         </div>
       </div>
 
       <h2>{{ t('home.topFestivals') }}</h2>
       <div class="festivals">
-        <div class="grid">
-          <FestivalCard
-            v-for="festival in festivals"
-            :key="festival.id"
-            :festival="festival"
-          />
-        </div>
+       <div class="grid" role="list">
+  <FestivalCard
+    v-for="festival in festivals"
+    :key="festival.id"
+    :festival="festival"
+    role="listitem"
+  />
+</div>
+
       </div>
     </div>
   </div>

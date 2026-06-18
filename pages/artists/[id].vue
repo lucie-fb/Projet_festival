@@ -5,7 +5,6 @@ import FestivalCard from "~/components/FestivalCard.vue";
 import { useRoute } from "vue-router";
 import { useApi } from "~/composables/useApi";
 
-
 definePageMeta({
   middleware: "auth",
 });
@@ -18,8 +17,7 @@ const route = useRoute();
 const { top20 } = useApi();
 const hasSearched = ref(false);
 const isLoading = ref(true);
-const { t } = useI18n() 
-
+const { t } = useI18n();
 
 async function search() {
   errorMessage.value = "";
@@ -89,7 +87,6 @@ onMounted(async () => {
   }
   isLoading.value = false;
 });
-
 </script>
 
 <template>
@@ -98,43 +95,49 @@ onMounted(async () => {
       <SearchBar v-model:query="searchTerm" @search="search" />
     </div>
 
-    <p>{{ t('search.artists') }}</p>
+    <p>{{ t("search.artists") }}</p>
 
-    <p v-if="errorMessage" class="error-message">
-      {{ t('search.error') }}
+    <p
+      v-if="errorMessage"
+      class="error-message"
+      role="alert"
+      aria-live="assertive"
+    >
+      {{ t("search.error") }}
     </p>
 
-    <div v-if="isLoading" class="loading-box">
+    <div v-if="isLoading" class="loading-box" role="status" aria-live="polite">
       <div class="pulse-loader"></div>
-      <p>{{ t('loading.artists') }}</p>
+      <p>{{ t("loading.artists") }}</p>
     </div>
 
-    <h1 v-if="!hasSearched">{{ t('titles.topArtists') }}</h1>
-    <h1 v-else>{{ t('titles.artistFound') }}</h1>
+    <h1 v-if="!hasSearched">{{ t("titles.topArtists") }}</h1>
+    <h1 v-else>{{ t("titles.artistFound") }}</h1>
 
     <div class="artists">
-      <div class="grid">
+      <div class="grid" role="list">
         <ArtistCard
           v-for="artist in artists"
           :key="artist.id"
           :artist="artist"
+          role="listitem"
         />
       </div>
     </div>
 
-    <h1 v-if="festivals.length">{{ t('titles.festivalsFound') }}</h1>
+    <h1 v-if="festivals.length">{{ t("titles.festivalsFound") }}</h1>
     <div class="festivals">
-      <div class="grid">
+      <div class="grid" role="list">
         <FestivalCard
           v-for="festival in festivals"
           :key="festival.id"
           :festival="festival"
+          role="listitem"
         />
       </div>
     </div>
   </div>
 </template>
-
 
 <style lang="css" scoped>
 p {
@@ -186,9 +189,18 @@ p {
 }
 
 @keyframes pulse {
-  0% { transform: scale(0.8); opacity: 0.6; }
-  50% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0.8); opacity: 0.6; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
 }
 
 .loading-box p {
@@ -265,5 +277,4 @@ p {
     font-size: 0.85rem;
   }
 }
-
 </style>

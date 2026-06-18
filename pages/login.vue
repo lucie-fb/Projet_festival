@@ -21,18 +21,38 @@ onMounted(async() => {
         src="/public/images/logo_sun&sound.png"
         class="login-logo"
       />
-      <div v-if="isLoadingUser" class="loading-connection">
+      <div 
+  v-if="isLoadingUser" 
+  class="loading-connection"
+  role="status"
+  aria-live="polite"
+>
         <div class="loading-spinner"></div>
         <p class="loading-text">{{ t('login.loading') }}</p>
       </div>
 
       <div v-else-if="user" class="login-content">
-        <p class="login-text">{{ t('login.loggedInAs') }} {{ user.profile.email }}</p>
-        <button class="btn-login" @click="logout">{{ t('login.logout') }}</button>
+        <p class="login-text">
+  <strong>{{ t('login.loggedInAs') }} :</strong> {{ user.profile.email }}
+</p>
+<button 
+  class="btn-login" 
+  @click="logout"
+  :aria-label="t('login.logout') + ' ' + user.profile.email"
+>
+  {{ t('login.logout') }}
+</button>
       </div>
 
       <div v-else class="login-content">
-        <button class="btn-login" @click="login">{{ t('login.login') }}</button>
+<button 
+  class="btn-login" 
+  @click="login"
+  :aria-label="t('login.login')"
+>
+  {{ t('login.login') }}
+</button>
+
       </div>
 
     </div>

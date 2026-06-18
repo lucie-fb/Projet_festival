@@ -84,9 +84,9 @@ onMounted(async () => {
 
 <template>
   <div class="festival-page">
-    <div v-if="isLoading" class="loading-box">
+    <div v-if="isLoading" class="loading-box" role="status" aria-live="polite">
       <div class="pulse-loader"></div>
-      <p>{{ t('festival.loading') }}</p>
+      <p>{{ t("festival.loading") }}</p>
     </div>
 
     <div v-else>
@@ -94,37 +94,61 @@ onMounted(async () => {
         <SearchBar v-model:query="searchTerm" @search="search" />
       </div>
 
-      <p>{{ t('festival.searchPrompt') }}</p>
+     <p>{{ t('festival.searchPrompt') }}</p>
 
-      <p v-if="errorMessage" class="error-message">
+      <p
+        v-if="errorMessage"
+        class="error-message"
+        role="alert"
+        aria-live="assertive"
+      >
         {{ errorMessage }}
       </p>
 
       <div class="filter-row">
-        <input v-model="filterDate" type="date" class="filter-date" />
-        <button class="filter-btn" @click="applyFilter">
-          {{ t('festival.filterByDate') }}
+        <label for="filter-date" class="sr-only">
+          {{ t("festival.filterByDate") }}
+        </label>
+
+        <input
+          id="filter-date"
+          v-model="filterDate"
+          type="date"
+          class="filter-date"
+        />
+
+        <button
+          class="filter-btn"
+          @click="applyFilter"
+          :aria-label="t('festival.filterByDate')"
+        >
+          {{ t("festival.filterByDate") }}
         </button>
       </div>
 
-      <select v-model="selectedGenre" class="filter-select">
-        <option value="">{{ t('festival.allGenres') }}</option>
-        <option value="Rock">{{ t('genres.rock') }}</option>
-        <option value="Pop">{{ t('genres.pop') }}</option>
-        <option value="Electronic">{{ t('genres.electronic') }}</option>
-        <option value="Hip-Hop">{{ t('genres.hiphop') }}</option>
-        <option value="Jazz">{{ t('genres.jazz') }}</option>
+      <label for="genre-select" class="sr-only">
+        {{ t("festival.allGenres") }}
+      </label>
+
+      <select id="genre-select" v-model="selectedGenre" class="filter-select">
+        <option value="">{{ t("festival.allGenres") }}</option>
+        <option value="Rock">{{ t("genres.rock") }}</option>
+        <option value="Pop">{{ t("genres.pop") }}</option>
+        <option value="Electronic">{{ t("genres.electronic") }}</option>
+        <option value="Hip-Hop">{{ t("genres.hiphop") }}</option>
+        <option value="Jazz">{{ t("genres.jazz") }}</option>
       </select>
 
-      <h1 v-if="!hasSearched">{{ t('festival.top20') }}</h1>
-      <h1 v-else>{{ t('festival.results') }}</h1>
+      <h1 v-if="!hasSearched">{{ t("festival.top20") }}</h1>
+      <h1 v-else>{{ t("festival.results") }}</h1>
 
       <div class="festivals">
-        <div class="grid">
+        <div class="grid" role="list">
           <FestivalCard
             v-for="festival in filteredFestivals"
             :key="festival.id"
             :festival="festival"
+            role="listitem"
           />
         </div>
       </div>
@@ -232,9 +256,18 @@ p {
 }
 
 @keyframes pulse {
-  0% { transform: scale(0.8); opacity: 0.6; }
-  50% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0.8); opacity: 0.6; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
 }
 
 .loading-box p {
@@ -317,5 +350,18 @@ p {
     font-size: 0.9rem;
   }
 }
+</style>
 
+<style lang="css">
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>

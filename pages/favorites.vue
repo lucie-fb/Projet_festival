@@ -77,30 +77,41 @@ definePageMeta({ middleware: "auth" })
     <h1>{{ t("favorites.title") }}</h1>
 
     <div class="create-playlist">
-      <input 
-        v-model="newPlaylistName" 
-        :placeholder="t('favorites.placeholder')" 
-      />
-      <button @click="createPlaylist">
-        {{ t("favorites.create") }}
-      </button>
+      <label for="new-playlist" class="sr-only">
+  {{ t('favorites.placeholder') }}
+</label>
+
+<input 
+  id="new-playlist"
+  v-model="newPlaylistName" 
+  :placeholder="t('favorites.placeholder')" 
+/>
+
+     <button 
+  @click="createPlaylist"
+  :aria-label="t('favorites.create') + ' : ' + newPlaylistName"
+>
+  {{ t("favorites.create") }}
+</button>
     </div>
 
-    <div v-if="defaultPlaylist" class="default-playlist">
+    <div v-if="defaultPlaylist" class="default-playlist" role="list">
       <PlaylistCard 
         :playlist="defaultPlaylist" 
         isDefault
+        role="listitem"
         @open="openPlaylistModal"
         @rename="renamePlaylist"
         @delete="deletePlaylist"
       />
     </div>
 
-    <div class="playlists">
+    <div class="playlists"  role="list">
       <PlaylistCard 
         v-for="p in playlists" 
         :key="p.id" 
         :playlist="p"
+         role="listitem"
         @open="openPlaylistModal"
         @rename="renamePlaylist"
         @delete="deletePlaylist"
@@ -239,4 +250,18 @@ definePageMeta({ middleware: "auth" })
   }
 }
 
+</style>
+
+<style lang="css">
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>
