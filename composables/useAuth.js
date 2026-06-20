@@ -9,6 +9,14 @@ export const useAuth = () => {
     nuxtApp.$oidc.signinRedirect()
   }
 
+  function register() {
+    nuxtApp.$oidc.signinRedirect({
+      extraQueryParams: {
+        prompt: 'create'
+      }
+    })
+  }
+
   function logout() {
     nuxtApp.$oidc.signoutRedirect()
   }
@@ -32,5 +40,5 @@ export const useAuth = () => {
     return !!user.value && !user.value.expired
   }
 
-  return { user, login, logout, loadUser, isAuthenticated }
+  return { user, login, register, logout, loadUser, isAuthenticated }
 }

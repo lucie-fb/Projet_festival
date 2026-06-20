@@ -1,7 +1,7 @@
 <script setup>
 
 
-const { user, login, logout, loadUser } = useAuth();
+const { user, login, register, logout, loadUser } = useAuth();
 const { t } = useI18n();
 const isLoadingUser = ref(true);
 
@@ -52,7 +52,13 @@ onMounted(async() => {
 >
   {{ t('login.login') }}
 </button>
-
+<button 
+  class="btn-login btn-register" 
+  @click="register"
+  :aria-label="t('login.register') || 'Créer un compte'"
+>
+  Créer un compte
+</button>
       </div>
 
     </div>
@@ -130,6 +136,17 @@ onMounted(async() => {
 
 .btn-login:hover {
   background: #ffd6f4;
+}
+
+.btn-register {
+  background: transparent;
+  border: 2px solid var(--color-secondary);
+  color: var(--color-white);
+}
+
+.btn-register:hover {
+  background: rgba(255, 192, 238, 0.15);
+  color: var(--color-secondary);
 }
 
 /* Lien "Supprimer mon compte" */
