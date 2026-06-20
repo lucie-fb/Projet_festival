@@ -72,7 +72,9 @@ function applyFilter() {
 
 onMounted(async () => {
   if (!route.query.name) {
-    festivals.value = await top20f();
+    const result = await top20f();
+    festivals.value = result;
+    allFestivals.value = result;
   }
   if (route.query.name) {
     searchTerm.value = route.query.name;
