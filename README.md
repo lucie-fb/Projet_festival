@@ -1,75 +1,73 @@
-# Nuxt Minimal Starter
+# Sun&Sound
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Sun&Sound est une application web que j’ai développée dans le cadre de ma première année de Bachelor Développement Web Fullstack.  
+L’objectif est simple : permettre aux utilisateurs de suivre leurs artistes préférés et de trouver facilement les festivals où ils se produisent.
 
-## Setup
+Aujourd’hui, les informations sont dispersées entre plusieurs plateformes (Spotify, Ticketmaster, Google, Instagram, sites de festivals).  
+Sun&Sound centralise ces données et propose une recherche inversée : on part de l’artiste pour découvrir les festivals associés.
 
-Make sure to install dependencies:
 
-```bash
-# npm
-npm install
+# Objectif du projet
 
-# pnpm
-pnpm install
+Le projet vise à simplifier la recherche musicale et événementielle.  
+Mon projet permet de :
 
-# yarn
-yarn install
+- rechercher un artiste,
+- consulter les festivals où il est programmé,
+- enregistrer des favoris,
+- accéder à un espace utilisateur personnalisé.
 
-# bun
-bun install
-```
+L’application ne remplace pas Spotify ou Ticketmaster.  
+Elle utilise leurs données pour offrir une expérience plus simple et plus adaptée aux besoins des utilisateurs.
 
-## Development Server
 
-Start the development server on `http://localhost:3000`:
+# Fonctionnalités principales
 
-```bash
-# npm
-npm run dev
+- Recherche d’artistes via l’API Spotify  
+- Récupération des festivals associés via l’API Ticketmaster  
+- Système de favoris (artistes)  
+- Authentification sécurisée   
+- Interface pensée pour être accessible
 
-# pnpm
-pnpm dev
 
-# yarn
-yarn dev
+# Technologies utilisées
 
-# bun
-bun run dev
-```
 
-## Production
+- Nuxt 3  
+- Pinia  
+- Drizzle ORM  
+- Neon (PostgreSQL)  
+- Zod  
+- Zitadel (authentification)  
+- Vercel (hébergement et CI/CD)  
+- Spotify API  
+- Ticketmaster API
 
-Build the application for production:
+# Fonctionnement général
 
-```bash
-# npm
-npm run build
+L’application interroge Spotify pour récupérer les informations sur les artistes, puis Ticketmaster pour trouver les festivals correspondants.  
+Les favoris sont enregistrés dans une base PostgreSQL.  
+L’état global (utilisateur connecté et favoris) est géré avec Pinia.  
+Les données externes sont validées pour éviter les erreurs.  
+L’authentification est assurée par Zitadel.  
+Le projet est déployé automatiquement via Vercel.
 
-# pnpm
-pnpm build
 
-# yarn
-yarn build
+# Structure du projet
 
-# bun
-bun run build
-```
+/components     → composants d’interface (cartes artistes, festivals, etc.)
+/pages          → pages principales de l’application
+/server/api     → endpoints pour Spotify, Ticketmaster et les favoris
+/stores         → gestion d’état avec Pinia
+/utils          → fonctions utilitaires (utilisateurs et token Spotify)
 
-Locally preview production build:
 
-```bash
-# npm
-npm run preview
+# Objectifs pédagogiques
 
-# pnpm
-pnpm preview
+Ce projet m’a permise de travailler sur :
 
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- l’intégration d’APIs externes,
+- une base de données réelle,
+- l’authentification via une autre plateforme,
+- l’accessibilité,
+- la structuration d’un projet complet.
