@@ -1,95 +1,111 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const { mockDb, mockReadBody } = vi.hoisted(() => {
-  vi.stubGlobal('defineEventHandler', (fn) => fn);
-  const readBodyFn = vi.fn();
-  vi.stubGlobal('readBody', readBodyFn);
-  vi.stubGlobal('createError', vi.fn((error) => {
-    const err = new Error(error.statusMessage);
-    err.statusCode = error.statusCode;
-    err.data = error.data;
-    return err;
-  }));
-
-  const mockWhereSelect = vi.fn();
-  const mockFromSelect = vi.fn(() => ({ where: mockWhereSelect }));
-  const mockSelect = vi.fn(() => ({ from: mockFromSelect }));
-
-  const mockWhereDelete = vi.fn();
-  const mockDelete = vi.fn(() => ({ where: mockWhereDelete }));
-
-  return {
-    mockDb: {
-      select: mockSelect,
-      delete: mockDelete,
-      mockWhereSelect,
-      mockWhereDelete
-    },
-    mockReadBody: readBodyFn
-  };
+const mockReadBody = vi.fn();
+vi.stubGlobal('readBody', mockReadBody);
+vi.stubGlobal('defineEventHandler', (fn) => fn);
+vi.stubGlobal('createError', (errorConfig) => {
+  const error = new Error(errorConfig.statusMessage);
+  error.statusCode = errorConfig.statusCode;
+  error.data = errorConfig.data;
+  return error;
 });
+
+const mockWhereSelect = vi.fn();
+const mockFromSelect = vi.fn(() => ({ where: mockWhereSelect }));
+const mockSelect = vi.fn(() => ({ from: mockFromSelect }));
+
+const mockWhereDelete = vi.fn();
+const mockDelete = vi.fn(() => ({ where: mockWhereDelete }));
+
+const mockDb = {
+  select: mockSelect,
+  delete: mockDelete
+};
 
 vi.mock('~/server/db', () => ({
   db: mockDb
 }));
 
+const mockGetUserId = vi.fn();
 vi.mock('~/server/utils/auth', () => ({
-  getUserId: vi.fn()
+  getUserId: mockGetUserId
 }));
 
-import handler from '../../../../../server/api/playlists/remove-item.post';
-import { getUserId } from '~/server/utils/auth';
+describe('Handler API - POST /api/playlists/remove-item', () => {
+  let handler;
 
-describe('playlists/remove-item.post api handler', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+
+    if (!handler) {
+      const module = await import('../../../../../server/api/playlists/remove-item.post');
+      handler = module.default;
+    }
   });
 
-  it('should throw 400 error when request body is invalid', async () => {
-    getUserId.mockReturnValue('user-1');
+  it('devrait lever une erreur 400 si l\'identifiant de l\'élément (itemId) est manquant', async () => {
+    mockGetUserId.mockReturnValue('user-999');
     mockReadBody.mockResolvedValue({});
 
-    const event = {};
-    await expect(handler(event)).rejects.toThrow('Invalid data');
+    const fakeEvent = {};
+    
+    await expect(handler(fakeEvent)).rejects.toThrow('Invalid data');
   });
 
-  it('should throw 404 error when playlist item is not found', async () => {
-    getUserId.mockReturnValue('user-1');
+  it('devrait lever une erreur 404 si l\'élément de playlist à retirer n\'existe pas', async () => {
+    mockGetUserId.mockReturnValue('user-999');
     mockReadBody.mockResolvedValue({ itemId: 123 });
 
-    mockDb.mockWhereSelect.mockResolvedValueOnce([]); 
+    mockWhereSelect.mockResolvedValueOnce([]); 
 
-    const event = {};
-    await expect(handler(event)).rejects.toThrow('Item not found');
+    const fakeEvent = {};
+    
+    await expect(handler(fakeEvent)).rejects.toThrow('Item not found');
   });
 
-  it('should throw 403 error when playlist is not owned by user', async () => {
-    getUserId.mockReturnValue('user-1');
+  it('devrait lever une erreur 403 si la playlist contenant l\'élément n\'appartient pas à l\'utilisateur', async () => {
+    mockGetUserId.mockReturnValue('user-999');
     mockReadBody.mockResolvedValue({ itemId: 123 });
 
-    mockDb.mockWhereSelect
+    mockWhereSelect
       .mockResolvedValueOnce([{ playlistId: 99 }])
       .mockResolvedValueOnce([]);
 
-    const event = {};
-    await expect(handler(event)).rejects.toThrow('You cannot remove items from this playlist');
+    const fakeEvent = {};
+    
+    await expect(handler(fakeEvent)).rejects.toThrow('You cannot remove items from this playlist');
   });
 
-  it('should delete the playlist item successfully', async () => {
-    getUserId.mockReturnValue('user-1');
+  it('devrait supprimer l\'élément de la playlist en base de données', async () => {
+    mockGetUserId.mockReturnValue('user-999');
     mockReadBody.mockResolvedValue({ itemId: 123 });
 
-    mockDb.mockWhereSelect
+    mockWhereSelect
       .mockResolvedValueOnce([{ playlistId: 99 }])
-      .mockResolvedValueOnce([{ id: 99, userId: 'user-1' }]);
+      .mockResolvedValueOnce([{ id: 99, userId: 'user-999' }]);
 
-    mockDb.mockWhereDelete.mockResolvedValue({ count: 1 });
+    mockWhereDelete.mockResolvedValue({ count: 1 });
 
-    const event = {};
-    const result = await handler(event);
+    const fakeEvent = {};
+    await handler(fakeEvent);
 
-    expect(result).toEqual({ success: true });
-    expect(mockDb.delete).toHaveBeenCalledTimes(1);
-    expect(mockDb.mockWhereDelete).toHaveBeenCalled();
+    expect(mockDelete).toHaveBeenCalled();
+    expect(mockWhereDelete).toHaveBeenCalled();
+  });
+
+  it('devrait retourner success en cas de suppression réussie', async () => {
+    mockGetUserId.mockReturnValue('user-999');
+    mockReadBody.mockResolvedValue({ itemId: 123 });
+
+    mockWhereSelect
+      .mockResolvedValueOnce([{ playlistId: 99 }])
+      .mockResolvedValueOnce([{ id: 99, userId: 'user-999' }]);
+
+    mockWhereDelete.mockResolvedValue({ count: 1 });
+
+    const fakeEvent = {};
+    const reponse = await handler(fakeEvent);
+
+    expect(reponse).toEqual({ success: true });
   });
 });

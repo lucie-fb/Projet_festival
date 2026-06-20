@@ -25,9 +25,10 @@ vi.stubGlobal('useLocalePath', () => mockLocalePath);
 const mockFetch = vi.fn();
 vi.stubGlobal('$fetch', mockFetch);
 
-describe('ArtistCard.vue', () => {
+describe('Composant ArtistCard.vue', () => {
   let pinia;
   let userDataStore;
+  
   const mockArtist = {
     id: 'art-123',
     name: 'Jane Doe',
@@ -63,49 +64,88 @@ describe('ArtistCard.vue', () => {
     });
   };
 
-  it('renders artist information correctly', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.find('h2').text()).toBe('Jane Doe');
-    expect(wrapper.find('img').attributes('src')).toBe('http://jane.jpg');
-    expect(wrapper.find('.fav-btn').exists()).toBe(true);
-    expect(wrapper.find('.menu-btn').exists()).toBe(true);
+  describe('Affichage des informations de l\'artiste', () => {
+    it('devrait afficher le nom de l\'artiste dans un titre h2', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.find('h2').text()).toBe('Jane Doe');
+    });
+
+    it('devrait charger la photo de l\'artiste dans la balise img', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.find('img').attributes('src')).toBe('http://jane.jpg');
+    });
+
+    it('devrait afficher le bouton pour ajouter aux favoris', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.find('.fav-btn').exists()).toBe(true);
+    });
+
+    it('devrait afficher le bouton menu (les trois points)', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.find('.menu-btn').exists()).toBe(true);
+    });
   });
 
-  it('renders in compact mode without buttons', () => {
-    const wrapper = createWrapper({ compact: true });
-    expect(wrapper.find('.fav-btn').exists()).toBe(false);
-    expect(wrapper.find('.menu-btn').exists()).toBe(false);
-    expect(wrapper.find('img').classes()).toContain('compact');
-    expect(wrapper.find('h2').classes()).toContain('compact');
+  describe('Affichage en mode compact', () => {
+    it('ne devrait pas afficher le bouton favori', () => {
+      const wrapper = createWrapper({ compact: true });
+      expect(wrapper.find('.fav-btn').exists()).toBe(false);
+    });
+
+    it('ne devrait pas afficher le bouton menu', () => {
+      const wrapper = createWrapper({ compact: true });
+      expect(wrapper.find('.menu-btn').exists()).toBe(false);
+    });
+
+    it('devrait appliquer la classe CSS "compact" sur l\'image', () => {
+      const wrapper = createWrapper({ compact: true });
+      expect(wrapper.find('img').classes()).toContain('compact');
+    });
+
+    it('devrait appliquer la classe CSS "compact" sur le titre h2', () => {
+      const wrapper = createWrapper({ compact: true });
+      expect(wrapper.find('h2').classes()).toContain('compact');
+    });
   });
 
-  describe('Navigation', () => {
-    it('redirects to artist page if route is not /artists', async () => {
+  describe('Clic sur la carte (Redirection ou Sélection)', () => {
+    it('devrait naviguer vers la page de l\'artiste si la page actuelle n\'est pas la liste d\'artistes', async () => {
       mockRoute.path = '/home';
       const wrapper = createWrapper();
+      
       await wrapper.trigger('click');
+      
       expect(mockLocalePath).toHaveBeenCalled();
       expect(mockPush).toHaveBeenCalledWith('/artists/[id]?name=Jane%20Doe');
     });
 
-    it('emits select event if route is /artists', async () => {
+    it('ne devrait pas rediriger si on est déjà sur la page /artists', async () => {
       mockRoute.path = '/artists';
       const wrapper = createWrapper();
+      
       await wrapper.trigger('click');
+      
       expect(mockPush).not.toHaveBeenCalled();
+    });
+
+    it('devrait émettre l\'événement "select" avec le nom de l\'artiste si on est sur la page /artists', async () => {
+      mockRoute.path = '/artists';
+      const wrapper = createWrapper();
+      
+      await wrapper.trigger('click');
+      
       expect(wrapper.emitted('select')).toBeTruthy();
       expect(wrapper.emitted('select')[0]).toEqual(['Jane Doe']);
     });
   });
 
-  describe('Favorites toggle', () => {
-    it('adds to favorites if not already a favorite', async () => {
+  describe('Gestion des favoris', () => {
+    it('devrait appeler l\'API POST /api/favorites/like si l\'artiste n\'est pas encore favori', async () => {
       userDataStore.isFavorite = vi.fn().mockReturnValue(false);
       mockFetch.mockResolvedValue({ success: true });
-
       const wrapper = createWrapper();
-      const favBtn = wrapper.find('.fav-btn');
-      await favBtn.trigger('click');
+      
+      await wrapper.find('.fav-btn').trigger('click');
 
       expect(mockFetch).toHaveBeenCalledWith('/api/favorites/like', {
         method: 'POST',
@@ -116,6 +156,15 @@ describe('ArtistCard.vue', () => {
         },
         credentials: 'include'
       });
+    });
+
+    it('devrait ajouter l\'artiste dans la liste locale du store favoris', async () => {
+      userDataStore.isFavorite = vi.fn().mockReturnValue(false);
+      mockFetch.mockResolvedValue({ success: true });
+      const wrapper = createWrapper();
+      
+      await wrapper.find('.fav-btn').trigger('click');
+
       expect(userDataStore.favorites).toContainEqual({
         artistId: 'art-123',
         name: 'Jane Doe',
@@ -123,16 +172,15 @@ describe('ArtistCard.vue', () => {
       });
     });
 
-    it('removes from favorites if already a favorite', async () => {
+    it('devrait appeler l\'API POST /api/favorites/unlike si l\'artiste est déjà favori', async () => {
       userDataStore.favorites = [
         { artistId: 'art-123', name: 'Jane Doe', image: 'http://jane.jpg' }
       ];
       userDataStore.isFavorite = vi.fn().mockReturnValue(true);
       mockFetch.mockResolvedValue({ success: true });
-
       const wrapper = createWrapper();
-      const favBtn = wrapper.find('.fav-btn');
-      await favBtn.trigger('click');
+      
+      await wrapper.find('.fav-btn').trigger('click');
 
       expect(mockFetch).toHaveBeenCalledWith('/api/favorites/unlike', {
         method: 'POST',
@@ -141,33 +189,50 @@ describe('ArtistCard.vue', () => {
         },
         credentials: 'include'
       });
+    });
+
+    it('devrait retirer l\'artiste de la liste locale du store favoris', async () => {
+      userDataStore.favorites = [
+        { artistId: 'art-123', name: 'Jane Doe', image: 'http://jane.jpg' }
+      ];
+      userDataStore.isFavorite = vi.fn().mockReturnValue(true);
+      mockFetch.mockResolvedValue({ success: true });
+      const wrapper = createWrapper();
+      
+      await wrapper.find('.fav-btn').trigger('click');
+
       expect(userDataStore.favorites).toEqual([]);
     });
   });
 
-  describe('Menu & playlists operations', () => {
-    it('toggles menu display when menu button is clicked', async () => {
-      const wrapper = createWrapper();
-      expect(wrapper.find('.menu-popup').exists()).toBe(false);
-      
-      const menuBtn = wrapper.find('.menu-btn');
-      await menuBtn.trigger('click');
-      expect(wrapper.find('.menu-popup').exists()).toBe(true);
-
-      await menuBtn.trigger('click');
-      expect(wrapper.find('.menu-popup').exists()).toBe(false);
-    });
-
-    it('adds artist to playlist and closes menu', async () => {
-      mockFetch.mockResolvedValue({ success: true });
+  describe('Menu contextuel et Playlists', () => {
+    it('devrait afficher le menu déroulant au clic sur le bouton menu', async () => {
       const wrapper = createWrapper();
       
       await wrapper.find('.menu-btn').trigger('click');
       
+      expect(wrapper.find('.menu-popup').exists()).toBe(true);
+    });
+
+    it('devrait fermer le menu déroulant si on clique une deuxième fois sur le bouton menu', async () => {
+      const wrapper = createWrapper();
+      const menuBtn = wrapper.find('.menu-btn');
+      
+      await menuBtn.trigger('click'); 
+      await menuBtn.trigger('click'); 
+      
+      expect(wrapper.find('.menu-popup').exists()).toBe(false);
+    });
+
+    it('devrait appeler l\'API POST /api/playlists/add-item au clic sur une playlist', async () => {
+      mockFetch.mockResolvedValue({ success: true });
+      const wrapper = createWrapper();
+      await wrapper.find('.menu-btn').trigger('click'); 
+      
       const playlistBtns = wrapper.findAll('.menu-popup button');
       const rockPlaylistBtn = playlistBtns.find(btn => btn.text().includes('My Rock'));
-      
       await rockPlaylistBtn.trigger('click');
+
       expect(mockFetch).toHaveBeenCalledWith('/api/playlists/add-item', {
         method: 'POST',
         body: {
@@ -178,15 +243,25 @@ describe('ArtistCard.vue', () => {
         },
         credentials: 'include'
       });
+    });
+
+    it('devrait fermer le menu déroulant après l\'ajout à une playlist', async () => {
+      mockFetch.mockResolvedValue({ success: true });
+      const wrapper = createWrapper();
+      await wrapper.find('.menu-btn').trigger('click'); 
+      
+      const playlistBtns = wrapper.findAll('.menu-popup button');
+      const rockPlaylistBtn = playlistBtns.find(btn => btn.text().includes('My Rock'));
+      await rockPlaylistBtn.trigger('click');
+
       expect(wrapper.find('.menu-popup').exists()).toBe(false);
     });
 
-    it('redirects to create playlist page', async () => {
+    it('devrait rediriger vers /favorites au clic sur "Créer une playlist"', async () => {
       const wrapper = createWrapper();
-      await wrapper.find('.menu-btn').trigger('click');
+      await wrapper.find('.menu-btn').trigger('click'); 
       
-      const createBtn = wrapper.find('.create-btn');
-      await createBtn.trigger('click');
+      await wrapper.find('.create-btn').trigger('click');
       
       expect(mockLocalePath).toHaveBeenCalledWith('/favorites');
       expect(mockPush).toHaveBeenCalledWith('/favorites');

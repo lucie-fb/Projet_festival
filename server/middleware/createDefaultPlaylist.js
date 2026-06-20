@@ -7,7 +7,7 @@ import { getCookie } from "h3"
 export default defineEventHandler(async (event) => {
   if (!getCookie(event, "id_token")) return
 
-  const userId = getUserId(event)
+  const userId = await getUserId(event)
 
     if(!userId) return
         

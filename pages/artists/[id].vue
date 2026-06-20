@@ -36,21 +36,7 @@ async function search() {
       },
     });
 
-    const artistsAndAlbums = [];
-
-    for (const artist of result) {
-      const lastAlbum = await $fetch("/api/spotify/albums", {
-        method: "GET",
-        query: { id: artist.id },
-      });
-
-      artistsAndAlbums.push({
-        ...artist,
-        lastAlbum,
-      });
-    }
-
-    artists.value = artistsAndAlbums;
+    artists.value = result;
 
     await $fetch("/api/artists/save", {
       method: "POST",

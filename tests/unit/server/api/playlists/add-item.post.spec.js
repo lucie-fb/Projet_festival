@@ -1,116 +1,133 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const { mockDb, mockReadBody } = vi.hoisted(() => {
-  vi.stubGlobal('defineEventHandler', (fn) => fn);
-  const readBodyFn = vi.fn();
-  vi.stubGlobal('readBody', readBodyFn);
-  vi.stubGlobal('createError', vi.fn((error) => {
-    const err = new Error(error.statusMessage);
-    err.statusCode = error.statusCode;
-    err.data = error.data;
-    return err;
-  }));
-
-  const mockWhereSelect = vi.fn();
-  const mockFromSelect = vi.fn(() => ({ where: mockWhereSelect }));
-  const mockSelect = vi.fn(() => ({ from: mockFromSelect }));
-
-  const mockValuesInsert = vi.fn();
-  const mockInsert = vi.fn(() => ({ values: mockValuesInsert }));
-
-  return {
-    mockDb: {
-      select: mockSelect,
-      insert: mockInsert,
-      mockWhereSelect,
-      mockValuesInsert
-    },
-    mockReadBody: readBodyFn
-  };
+const mockReadBody = vi.fn();
+vi.stubGlobal('readBody', mockReadBody);
+vi.stubGlobal('defineEventHandler', (fn) => fn);
+vi.stubGlobal('createError', (errorConfig) => {
+  const error = new Error(errorConfig.statusMessage);
+  error.statusCode = errorConfig.statusCode;
+  error.data = errorConfig.data;
+  return error;
 });
+
+const mockWhereSelect = vi.fn();
+const mockFromSelect = vi.fn(() => ({ where: mockWhereSelect }));
+const mockSelect = vi.fn(() => ({ from: mockFromSelect }));
+
+const mockValuesInsert = vi.fn();
+const mockInsert = vi.fn(() => ({ values: mockValuesInsert }));
+
+const mockDb = {
+  select: mockSelect,
+  insert: mockInsert
+};
 
 vi.mock('~/server/db', () => ({
   db: mockDb
 }));
 
+const mockGetUserId = vi.fn();
 vi.mock('~/server/utils/auth', () => ({
-  getUserId: vi.fn()
+  getUserId: mockGetUserId
 }));
 
-import handler from '../../../../../server/api/playlists/add-item.post';
-import { getUserId } from '~/server/utils/auth';
+describe('Handler API - POST /api/playlists/add-item', () => {
+  let handler;
 
-describe('playlists/add-item.post api handler', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+
+    if (!handler) {
+      const module = await import('../../../../../server/api/playlists/add-item.post');
+      handler = module.default;
+    }
   });
 
-  it('should throw 400 error when request body is invalid', async () => {
-    getUserId.mockReturnValue('user-1');
-    mockReadBody.mockResolvedValue({});
+  it('devrait lever une erreur 400 si les données envoyées (body) sont invalides', async () => {
+    mockGetUserId.mockReturnValue('user-123');
+    mockReadBody.mockResolvedValue({}); 
 
-    const event = {};
-    await expect(handler(event)).rejects.toThrow('Invalid data');
+    const fakeEvent = {};
+    
+    await expect(handler(fakeEvent)).rejects.toThrow('Invalid data');
   });
 
-  it('should throw 403 error when playlist is not found or not owned by user', async () => {
-    getUserId.mockReturnValue('user-1');
+  it('devrait lever une erreur 403 si la playlist n\'existe pas ou n\'appartient pas à l\'utilisateur', async () => {
+    mockGetUserId.mockReturnValue('user-123');
     mockReadBody.mockResolvedValue({
       playlistId: 42,
-      artistId: 'art-99',
-      name: 'Artist Name',
+      artistId: 'artiste-99',
+      name: 'Nom Artiste',
+      image: 'http://img.jpg'
+    });
+    mockWhereSelect.mockResolvedValueOnce([]);
+
+    const fakeEvent = {};
+    
+    await expect(handler(fakeEvent)).rejects.toThrow('Playlist not found or not yours');
+  });
+
+  it('devrait renvoyer un indicateur si l\'artiste est déjà dans la playlist', async () => {
+    mockGetUserId.mockReturnValue('user-123');
+    mockReadBody.mockResolvedValue({
+      playlistId: 42,
+      artistId: 'artiste-99',
+      name: 'Nom Artiste',
       image: 'http://img.jpg'
     });
 
-    mockDb.mockWhereSelect.mockResolvedValueOnce([]);
-
-    const event = {};
-    await expect(handler(event)).rejects.toThrow('Playlist not found or not yours');
-  });
-
-  it('should return alreadyInPlaylist: true if item already exists', async () => {
-    getUserId.mockReturnValue('user-1');
-    mockReadBody.mockResolvedValue({
-      playlistId: 42,
-      artistId: 'art-99',
-      name: 'Artist Name',
-      image: 'http://img.jpg'
-    });
-
-    mockDb.mockWhereSelect
-      .mockResolvedValueOnce([{ id: 42, userId: 'user-1' }])
+    mockWhereSelect
+      .mockResolvedValueOnce([{ id: 42, userId: 'user-123' }])
       .mockResolvedValueOnce([{ id: 500 }]);
 
-    const event = {};
-    const result = await handler(event);
+    const fakeEvent = {};
+    const reponse = await handler(fakeEvent);
 
-    expect(result).toEqual({ success: true, alreadyInPlaylist: true });
-    expect(mockDb.insert).not.toHaveBeenCalled();
+    expect(reponse).toEqual({ success: true, alreadyInPlaylist: true });
   });
 
-  it('should insert and add item to playlist successfully', async () => {
-    getUserId.mockReturnValue('user-1');
+  it('ne devrait pas ajouter de doublons dans la table playlistItems', async () => {
+    mockGetUserId.mockReturnValue('user-123');
     mockReadBody.mockResolvedValue({
       playlistId: 42,
-      artistId: 'art-99',
-      name: 'Artist Name',
+      artistId: 'artiste-99',
+      name: 'Nom Artiste',
       image: 'http://img.jpg'
     });
 
-    mockDb.mockWhereSelect
-      .mockResolvedValueOnce([{ id: 42, userId: 'user-1' }])
+    mockWhereSelect
+      .mockResolvedValueOnce([{ id: 42, userId: 'user-123' }])
+      .mockResolvedValueOnce([{ id: 500 }]);
+
+    const fakeEvent = {};
+    await handler(fakeEvent);
+
+    expect(mockInsert).not.toHaveBeenCalled();
+  });
+
+  it('devrait ajouter l\'artiste à la playlist s\'il n\'y est pas encore', async () => {
+    mockGetUserId.mockReturnValue('user-123');
+    mockReadBody.mockResolvedValue({
+      playlistId: 42,
+      artistId: 'artiste-99',
+      name: 'Nom Artiste',
+      image: 'http://img.jpg'
+    });
+
+    mockWhereSelect
+      .mockResolvedValueOnce([{ id: 42, userId: 'user-123' }])
       .mockResolvedValueOnce([]); 
 
-    mockDb.mockValuesInsert.mockResolvedValue({ success: true });
+    mockValuesInsert.mockResolvedValue({ success: true });
 
-    const event = {};
-    const result = await handler(event);
+    const fakeEvent = {};
+    const reponse = await handler(fakeEvent);
 
-    expect(result).toEqual({ success: true });
-    expect(mockDb.mockValuesInsert).toHaveBeenCalledWith({
+    expect(reponse).toEqual({ success: true });
+    expect(mockValuesInsert).toHaveBeenCalledWith({
       playlistId: 42,
-      artistId: 'art-99',
-      name: 'Artist Name',
+      artistId: 'artiste-99',
+      name: 'Nom Artiste',
       image: 'http://img.jpg'
     });
   });

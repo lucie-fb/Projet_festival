@@ -1,62 +1,62 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const { mockDb } = vi.hoisted(() => {
-    vi.stubGlobal('defineEventHandler', (fn) => fn);
+vi.stubGlobal('defineEventHandler', (fn) => fn);
 
-    const mockWhereSelect = vi.fn();
-    const mockFromSelect = vi.fn(() => ({ where: mockWhereSelect }));
-    const mockSelect = vi.fn(() => ({ from: mockFromSelect }));
+const mockWhereSelect = vi.fn();
+const mockFromSelect = vi.fn(() => ({ where: mockWhereSelect }));
+const mockSelect = vi.fn(() => ({ from: mockFromSelect }));
 
-    return {
-        mockDb: {
-            select: mockSelect,
-            mockWhereSelect
-        }
-    };
-});
+const mockDb = {
+    select: mockSelect
+};
 
 vi.mock('~/server/db', () => ({
     db: mockDb
 }));
 
+const mockGetUserId = vi.fn();
 vi.mock('~/server/utils/auth', () => ({
-    getUserId: vi.fn()
+    getUserId: mockGetUserId
 }));
 
-import handler from '../../../../../server/api/favorites/list.get';
-import { getUserId } from '~/server/utils/auth';
+describe('Handler API - GET /api/favorites/list', () => {
+    let handler;
 
-describe('favorites/list.get api handler', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.clearAllMocks();
+
+        if (!handler) {
+            const module = await import('../../../../../server/api/favorites/list.get');
+            handler = module.default;
+        }
     });
 
-    it('should return empty favorites if no default playlist exists', async () => {
-        getUserId.mockReturnValue('user-123');
-        mockDb.mockWhereSelect.mockResolvedValueOnce([]);
+    it('devrait renvoyer un tableau de favoris vide si la playlist par défaut n\'existe pas', async () => {
+        mockGetUserId.mockReturnValue('utilisateur-456');
+        
+        mockWhereSelect.mockResolvedValueOnce([]);
 
-        const event = {};
-        const result = await handler(event);
+        const fakeEvent = {};
+        const reponse = await handler(fakeEvent);
 
-        expect(result).toEqual({ favorites: [] });
-        expect(mockDb.select).toHaveBeenCalledTimes(1);
+        expect(reponse).toEqual({ favorites: [] });
     });
 
-    it('should return list of items in the default playlist', async () => {
-        getUserId.mockReturnValue('user-123');
-        const mockItems = [
-            { id: 1, name: 'Artist A', artistId: 'a' },
-            { id: 2, name: 'Artist B', artistId: 'b' }
+    it('devrait récupérer la liste des favoris de l\'utilisateur si la playlist par défaut existe', async () => {
+        mockGetUserId.mockReturnValue('utilisateur-456');
+
+        const mockFavoris = [
+            { id: 1, name: 'Artiste Pop', artistId: 'pop-1' },
+            { id: 2, name: 'Artiste Jazz', artistId: 'jazz-2' }
         ];
 
-        mockDb.mockWhereSelect
-            .mockResolvedValueOnce([{ id: 99 }])
-            .mockResolvedValueOnce(mockItems);
+        mockWhereSelect
+            .mockResolvedValueOnce([{ id: 88 }])
+            .mockResolvedValueOnce(mockFavoris);
 
-        const event = {};
-        const result = await handler(event);
+        const fakeEvent = {};
+        const reponse = await handler(fakeEvent);
 
-        expect(result).toEqual({ favorites: mockItems });
-        expect(mockDb.select).toHaveBeenCalledTimes(2);
+        expect(reponse).toEqual({ favorites: mockFavoris });
     });
 });

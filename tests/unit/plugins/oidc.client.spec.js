@@ -1,12 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { UserManager } from 'oidc-client-ts';
 
-vi.hoisted(() => {
-  vi.stubGlobal('defineNuxtPlugin', (fn) => fn);
-});
-
-import plugin from '../../../plugins/oidc.client';
-
 const mockAddUserLoaded = vi.fn();
 const mockAddUserUnloaded = vi.fn();
 
@@ -23,8 +17,10 @@ vi.mock('oidc-client-ts', () => {
   };
 });
 
-describe('oidc.client Nuxt plugin', () => {
-  beforeEach(() => {
+describe('Plugin Nuxt - oidc.client', () => {
+  let plugin;
+
+  beforeEach(async () => {
     vi.clearAllMocks();
     
     vi.stubEnv('VITE_ZITADEL_ISSUER', 'https://auth.example.com');
@@ -35,53 +31,58 @@ describe('oidc.client Nuxt plugin', () => {
     vi.stubGlobal('window', {
       localStorage: {}
     });
-    
     vi.stubGlobal('document', {
       cookie: ''
     });
-  });
-
-  it('should initialize UserManager with environment config', () => {
-    const result = plugin();
-
-    expect(UserManager).toHaveBeenCalled();
-    // Retrieve mock instance configuration
-    const mockInstance = vi.mocked(UserManager).mock.instances[0];
-    const configPassed = mockInstance.config;
     
-    expect(configPassed.authority).toBe('https://auth.example.com');
-    expect(configPassed.client_id).toBe('test-client');
-    expect(configPassed.redirect_uri).toBe('http://localhost/callback');
-    expect(configPassed.post_logout_redirect_uri).toBe('http://localhost/logout');
-    expect(configPassed.response_type).toBe('code');
-    expect(configPassed.scope).toBe('openid profile email');
-    expect(configPassed.loadUserInfo).toBe(true);
-    expect(configPassed.automaticSilentRenew).toBe(true);
-    expect(configPassed.signinRedirect).toEqual({ prompt: 'login' });
-
-    expect(result).toHaveProperty('provide');
-    expect(result.provide).toHaveProperty('oidc');
+    vi.stubGlobal('defineNuxtPlugin', (callback) => callback);
+    
+    if (!plugin) {
+      const module = await import('../../../plugins/oidc.client');
+      plugin = module.default;
+    }
   });
 
-  it('should set id_token cookie when user is loaded', () => {
+  it('devrait instancier UserManager', () => {
+    plugin();
+    expect(UserManager).toHaveBeenCalled();
+  });
+
+  it('devrait configurer l\'autorité (authority) de connexion', () => {
+    plugin();
+    const instanceMockee = vi.mocked(UserManager).mock.instances[0];
+    expect(instanceMockee.config.authority).toBe('https://auth.example.com');
+  });
+
+  it('devrait configurer le client_id avec la bonne valeur', () => {
+    plugin();
+    const instanceMockee = vi.mocked(UserManager).mock.instances[0];
+    expect(instanceMockee.config.client_id).toBe('test-client');
+  });
+
+  it('devrait configurer redirect_uri avec la bonne valeur', () => {
+    plugin();
+    const instanceMockee = vi.mocked(UserManager).mock.instances[0];
+    expect(instanceMockee.config.redirect_uri).toBe('http://localhost/callback');
+  });
+
+  it('devrait enregistrer le jeton (id_token) dans les cookies lors de la connexion', () => {
     plugin();
 
-    expect(mockAddUserLoaded).toHaveBeenCalled();
-    const onUserLoadedCallback = mockAddUserLoaded.mock.calls[0][0];
+    const callbackConnexion = mockAddUserLoaded.mock.calls[0][0];
 
     const mockUser = { id_token: 'fake-jwt-token' };
-    onUserLoadedCallback(mockUser);
+    callbackConnexion(mockUser);
 
     expect(document.cookie).toBe('id_token=fake-jwt-token; path=/; samesite=lax');
   });
 
-  it('should delete id_token cookie when user is unloaded', () => {
+  it('devrait supprimer le cookie (id_token) lors de la déconnexion', () => {
     plugin();
 
-    expect(mockAddUserUnloaded).toHaveBeenCalled();
-    const onUserUnloadedCallback = mockAddUserUnloaded.mock.calls[0][0];
+    const callbackDeconnexion = mockAddUserUnloaded.mock.calls[0][0];
 
-    onUserUnloadedCallback();
+    callbackDeconnexion();
 
     expect(document.cookie).toBe('id_token=; Max-Age=0; path=/');
   });

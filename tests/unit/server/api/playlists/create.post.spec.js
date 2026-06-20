@@ -1,86 +1,98 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const { mockDb, mockReadBody } = vi.hoisted(() => {
-  vi.stubGlobal('defineEventHandler', (fn) => fn);
-  const readBodyFn = vi.fn();
-  vi.stubGlobal('readBody', readBodyFn);
-  vi.stubGlobal('createError', vi.fn((error) => {
-    const err = new Error(error.statusMessage);
-    err.statusCode = error.statusCode || error.status;
-    err.data = error.data;
-    return err;
-  }));
-
-  const mockWhereSelect = vi.fn();
-  const mockFromSelect = vi.fn(() => ({ where: mockWhereSelect }));
-  const mockSelect = vi.fn(() => ({ from: mockFromSelect }));
-
-  const mockReturningInsert = vi.fn();
-  const mockValuesInsert = vi.fn(() => ({ returning: mockReturningInsert }));
-  const mockInsert = vi.fn(() => ({ values: mockValuesInsert }));
-
-  return {
-    mockDb: {
-      select: mockSelect,
-      insert: mockInsert,
-      mockWhereSelect,
-      mockReturningInsert,
-      mockValuesInsert
-    },
-    mockReadBody: readBodyFn
-  };
+const mockReadBody = vi.fn();
+vi.stubGlobal('readBody', mockReadBody);
+vi.stubGlobal('defineEventHandler', (fn) => fn);
+vi.stubGlobal('createError', (errorConfig) => {
+  const error = new Error(errorConfig.statusMessage);
+  error.statusCode = errorConfig.statusCode || errorConfig.status;
+  error.data = errorConfig.data;
+  return error;
 });
+
+const mockWhereSelect = vi.fn();
+const mockFromSelect = vi.fn(() => ({ where: mockWhereSelect }));
+const mockSelect = vi.fn(() => ({ from: mockFromSelect }));
+
+const mockReturningInsert = vi.fn();
+const mockValuesInsert = vi.fn(() => ({ returning: mockReturningInsert }));
+const mockInsert = vi.fn(() => ({ values: mockValuesInsert }));
+
+const mockDb = {
+  select: mockSelect,
+  insert: mockInsert
+};
 
 vi.mock('~/server/db', () => ({
   db: mockDb
 }));
 
+const mockGetUserId = vi.fn();
 vi.mock('~/server/utils/auth', () => ({
-  getUserId: vi.fn()
+  getUserId: mockGetUserId
 }));
 
-import handler from '../../../../../server/api/playlists/create.post';
-import { getUserId } from '~/server/utils/auth';
+describe('Handler API - POST /api/playlists/create', () => {
+  let handler;
 
-describe('playlists/create.post api handler', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+
+    if (!handler) {
+      const module = await import('../../../../../server/api/playlists/create.post');
+      handler = module.default;
+    }
   });
 
-  it('should throw 400 error when playlist name is empty/invalid', async () => {
-    getUserId.mockReturnValue('user-1');
-    mockReadBody.mockResolvedValue({ name: '' });
+  it('devrait lever une erreur 400 si le nom de la playlist est manquant ou vide', async () => {
+    mockGetUserId.mockReturnValue('user-789');
+    mockReadBody.mockResolvedValue({ name: '' }); 
 
-    const event = {};
-    await expect(handler(event)).rejects.toThrow('Invalid data');
+    const fakeEvent = {};
+    
+    await expect(handler(fakeEvent)).rejects.toThrow('Invalid data');
   });
 
-  it('should throw 409 error when playlist with same name already exists', async () => {
-    getUserId.mockReturnValue('user-1');
-    mockReadBody.mockResolvedValue({ name: 'Chill Vibes' });
+  it('devrait lever une erreur 409 si une playlist avec ce nom existe déjà pour cet utilisateur', async () => {
+    mockGetUserId.mockReturnValue('user-789');
+    mockReadBody.mockResolvedValue({ name: 'Ma Playlist Rock' });
 
-    mockDb.mockWhereSelect.mockResolvedValueOnce([{ id: 123, name: 'Chill Vibes', userId: 'user-1' }]);
+    mockWhereSelect.mockResolvedValueOnce([{ id: 123, name: 'Ma Playlist Rock', userId: 'user-789' }]);
 
-    const event = {};
-    await expect(handler(event)).rejects.toThrow('Une playlist avec ce nom existe déjà');
+    const fakeEvent = {};
+    
+    await expect(handler(fakeEvent)).rejects.toThrow('Une playlist avec ce nom existe déjà');
   });
 
-  it('should create playlist successfully', async () => {
-    getUserId.mockReturnValue('user-1');
-    mockReadBody.mockResolvedValue({ name: 'Chill Vibes' });
+  it('devrait insérer la nouvelle playlist dans la base de données avec isDefault à faux', async () => {
+    mockGetUserId.mockReturnValue('user-789');
+    mockReadBody.mockResolvedValue({ name: 'Ma Playlist Rock' });
+    mockWhereSelect.mockResolvedValueOnce([]);
+    
+    const mockPlaylistCreee = { id: 777, name: 'Ma Playlist Rock', userId: 'user-789', isDefault: false };
+    mockReturningInsert.mockResolvedValue([mockPlaylistCreee]);
 
-    mockDb.mockWhereSelect.mockResolvedValueOnce([]);
-    const createdPlaylist = { id: 777, name: 'Chill Vibes', userId: 'user-1', isDefault: false };
-    mockDb.mockReturningInsert.mockResolvedValue([createdPlaylist]);
+    const fakeEvent = {};
+    await handler(fakeEvent);
 
-    const event = {};
-    const result = await handler(event);
-
-    expect(result).toEqual({ success: true, playlist: createdPlaylist });
-    expect(mockDb.mockValuesInsert).toHaveBeenCalledWith({
-      userId: 'user-1',
-      name: 'Chill Vibes',
+    expect(mockValuesInsert).toHaveBeenCalledWith({
+      userId: 'user-789',
+      name: 'Ma Playlist Rock',
       isDefault: false
     });
+  });
+
+  it('devrait renvoyer les informations de la playlist créée en cas de succès', async () => {
+    mockGetUserId.mockReturnValue('user-789');
+    mockReadBody.mockResolvedValue({ name: 'Ma Playlist Rock' });
+    mockWhereSelect.mockResolvedValueOnce([]);
+    
+    const mockPlaylistCreee = { id: 777, name: 'Ma Playlist Rock', userId: 'user-789', isDefault: false };
+    mockReturningInsert.mockResolvedValue([mockPlaylistCreee]);
+
+    const fakeEvent = {};
+    const reponse = await handler(fakeEvent);
+
+    expect(reponse).toEqual({ success: true, playlist: mockPlaylistCreee });
   });
 });

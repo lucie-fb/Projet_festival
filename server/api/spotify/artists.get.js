@@ -1,4 +1,3 @@
-import { albums } from "../../db/schema"
 import { spotifyToken } from "../../utils/spotifyToken.get"
 
 export default defineEventHandler(async (event) => {
