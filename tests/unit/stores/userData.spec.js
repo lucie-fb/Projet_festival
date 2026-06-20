@@ -31,8 +31,8 @@ describe('Store Pinia - userData', () => {
     describe('Action - load()', () => {
         it('devrait appeler l\'API de favoris et l\'API de playlists', async () => {
             mockFetch
-                .mockResolvedValueOnce({ value: [] })
-                .mockResolvedValueOnce({ value: [] });
+                .mockResolvedValueOnce({ favorites: [] })
+                .mockResolvedValueOnce({ playlists: [] });
 
             const store = useUserDataStore();
             await store.load();
@@ -45,8 +45,8 @@ describe('Store Pinia - userData', () => {
         it('devrait enregistrer les favoris récupérés de l\'API dans le store', async () => {
             const mockFavoris = [{ artistId: 'art-1', name: 'Artiste un' }];
             mockFetch
-                .mockResolvedValueOnce({ value: mockFavoris })
-                .mockResolvedValueOnce({ value: [] });
+                .mockResolvedValueOnce({ favorites: mockFavoris })
+                .mockResolvedValueOnce({ playlists: [] });
 
             const store = useUserDataStore();
             await store.load();
@@ -57,8 +57,8 @@ describe('Store Pinia - userData', () => {
         it('devrait enregistrer les playlists récupérées de l\'API dans le store', async () => {
             const mockPlaylists = [{ id: 1, name: 'Ma super Playlist' }];
             mockFetch
-                .mockResolvedValueOnce({ value: [] })
-                .mockResolvedValueOnce({ value: mockPlaylists });
+                .mockResolvedValueOnce({ favorites: [] })
+                .mockResolvedValueOnce({ playlists: mockPlaylists });
 
             const store = useUserDataStore();
             await store.load();
@@ -68,8 +68,8 @@ describe('Store Pinia - userData', () => {
 
         it('devrait passer le témoin "loaded" à vrai après le chargement des données', async () => {
             mockFetch
-                .mockResolvedValueOnce({ value: [] })
-                .mockResolvedValueOnce({ value: [] });
+                .mockResolvedValueOnce({ favorites: [] })
+                .mockResolvedValueOnce({ playlists: [] });
 
             const store = useUserDataStore();
             await store.load();
@@ -86,6 +86,21 @@ describe('Store Pinia - userData', () => {
 
             expect(mockFetch).not.toHaveBeenCalled();
             expect(store.favorites).toEqual([{ artistId: 'deja-la' }]);
+        });
+
+        it('devrait appeler l\'API si force est à vrai même si "loaded" est déjà à vrai', async () => {
+            mockFetch
+                .mockResolvedValueOnce({ favorites: [{ artistId: 'nouveau-fav' }] })
+                .mockResolvedValueOnce({ playlists: [] });
+
+            const store = useUserDataStore();
+            store.loaded = true;
+            store.favorites = [{ artistId: 'deja-la' }];
+
+            await store.load(true);
+
+            expect(mockFetch).toHaveBeenCalledTimes(2);
+            expect(store.favorites).toEqual([{ artistId: 'nouveau-fav' }]);
         });
 
         it('devrait initialiser avec des tableaux vides si l\'API renvoie des valeurs indéfinies ou vides', async () => {

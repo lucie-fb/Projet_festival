@@ -8,16 +8,16 @@ export const useUserDataStore = defineStore('userData', {
     }),
 
     actions: {
-        async load() {
-            if(this.loaded) return
+        async load(force = false) {
+            if(this.loaded && !force) return
 
             const favs = await $fetch('/api/favorites/list', {
                 credentials: 'include'})
             const pls = await $fetch('/api/playlists/list', {
                 credentials: 'include'})
 
-            this.favorites = favs.value || []
-            this.playlists = pls.value || []
+            this.favorites = favs.favorites || []
+            this.playlists = pls.playlists || []
             this.loaded = true
         },
 

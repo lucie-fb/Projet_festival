@@ -86,6 +86,13 @@ async function addToPlaylist(playlistId) {
   showMenu.value = false;
 }
 
+async function addToDefault() {
+  if (!isFavorite.value) {
+    await toggleFavorite();
+  }
+  showMenu.value = false;
+}
+
 function goToCreatePlaylist() {
   router.push(localePath("/favorites"));
 }

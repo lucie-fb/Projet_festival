@@ -40,6 +40,23 @@ async function openPlaylistModal(playlist) {
   showModal.value = true
 }
 
+async function onPlaylistUpdated() {
+  await loadPlaylists()
+  if (selectedPlaylist.value) {
+    const updated = playlists.value.find(p => p.id === selectedPlaylist.value.id) || 
+                    (defaultPlaylist.value && defaultPlaylist.value.id === selectedPlaylist.value.id ? defaultPlaylist.value : null)
+    if (updated) {
+      selectedPlaylist.value = updated
+    }
+    const res = await $fetch("/api/playlists/items", {
+      method: "POST",
+      body: { playlistId: selectedPlaylist.value.id },
+      credentials: "include"
+    })
+    playlistItems.value = res.items
+  }
+}
+
 async function renamePlaylist(playlist) {
   const newName = prompt(t("favorites.renamePrompt", { name: playlist.name }))
   if (!newName || !newName.trim()) return
@@ -126,7 +143,7 @@ definePageMeta({ middleware: "auth" })
   :playlist="selectedPlaylist"
   :items="playlistItems"
   @close="showModal = false"
-  @updated="loadPlaylists"
+  @updated="onPlaylistUpdated"
 />
 </template>
 

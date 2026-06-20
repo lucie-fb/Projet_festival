@@ -1,5 +1,6 @@
 // composables/useAuth.js
 import { ref } from 'vue'
+import { useUserDataStore } from '@/stores/userData'
 
 export const useAuth = () => {
   const user = ref(null)
@@ -33,6 +34,11 @@ export const useAuth = () => {
 
     const u = await nuxtApp.$oidc.getUser()
     user.value = u
+
+    if (u && !u.expired) {
+      const userData = useUserDataStore()
+      await userData.load(true)
+    }
   }
 
   async function isAuthenticated() {
